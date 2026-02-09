@@ -1,5 +1,5 @@
 {
-  "name": "@codeo-za/vue-burger-menu",
+  "name": "vue-burger-menu",
   "version": "2.1.0",
   "private": false,
   "scripts": {
