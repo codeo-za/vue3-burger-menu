@@ -163,12 +163,16 @@
         document.removeEventListener('click', this.documentClick);
 
         const burgerButton = this.$refs.bmBurgerButton;
-        burgerButton.removeEventListener('touchstart', this.openMenu);
-        burgerButton.removeEventListener('click', this.openMenu);
+        if (burgerButton) {
+          burgerButton.removeEventListener('touchstart', this.openMenu);
+          burgerButton.removeEventListener('click', this.openMenu);
+        }
 
         const crossButton = this.$refs.bmCrossButton;
-        crossButton.removeEventListener('click', this.closeMenu);
-        crossButton.removeEventListener('touchstart', this.closeMenu);
+        if (crossButton) {
+          crossButton.removeEventListener('click', this.closeMenu);
+          crossButton.removeEventListener('touchstart', this.closeMenu);
+        }
       },
       watch: {
         isOpen: {

@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <component :is="currentMenu" :right="side === 'right' ? true: false">
+        <component :is="currentMenuComponent" :key="currentMenu" :right="side === 'right' ? true: false">
             <a href="#">
                 <i class="fa fa-fw fa-star-o"></i>
                 <span>Favourites</span>
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+    import { markRaw } from 'vue';
     import slide from './components/Menu/slide';
     import bubble from './components/Menu/bubble';
     import elastic from './components/Menu/elastic';
@@ -65,6 +66,21 @@
     import scalerotate from './components/Menu/scaleRotate';
     import stack from './components/Menu/stack';
     import Menu from './components/Menu';
+
+    // Vue 3 requires markRaw for component objects stored in reactive state
+    // to prevent them from being wrapped in a reactive proxy
+    const menuComponents = {
+      slide: markRaw(slide),
+      bubble: markRaw(bubble),
+      elastic: markRaw(elastic),
+      falldown: markRaw(falldown),
+      push: markRaw(push),
+      pushrotate: markRaw(pushrotate),
+      reveal: markRaw(reveal),
+      scaledown: markRaw(scaledown),
+      scalerotate: markRaw(scalerotate),
+      stack: markRaw(stack),
+    };
 
     export default {
       data() {
@@ -97,6 +113,11 @@
         stack,
         falldown,
         Menu
+      },
+      computed: {
+        currentMenuComponent() {
+          return menuComponents[this.currentMenu];
+        }
       },
       methods: {
         changeMenu(menu) {
