@@ -43,8 +43,11 @@ Work-in-progress: FallDown, Elastic, Stack
 ### Build Configuration
 
 - **`vite.config.js`**: Library mode build targeting `src/components/index.js`, outputs ES and UMD formats, externalizes `vue`
-- CSS is bundled into JS (no separate CSS file extraction in library mode)
+- CSS is injected into the DOM at runtime via `vite-plugin-css-injected-by-js` (matches the old Vue CLI `css.extract: false` behavior — consumers just import JS, no separate CSS import needed)
+- `resolve.extensions` includes `.vue` — Vite does not resolve `.vue` extensions by default (unlike webpack/Vue CLI), so this is required for the extensionless imports throughout the codebase
+- Rollup output uses `exports: 'named'` to avoid UMD consumer issues with mixed named/default exports
 - Published files: `dist/vue-burger-menu.es.js` (ES module) and `dist/vue-burger-menu.umd.js` (UMD)
+- `public/favicon.ico` gets copied into `dist/` by Vite on build — this is harmless and excluded by the `files` array in `package.json`
 
 ### Key Conventions
 
@@ -55,3 +58,9 @@ Work-in-progress: FallDown, Elastic, Stack
 - Wrapper components use `inheritAttrs: false` to control attribute forwarding
 - Animations use inline style manipulation rather than CSS classes/transitions
 - Vue 3 Options API with `unmounted` lifecycle hook
+
+### Known Issues
+
+- `fallDown.vue` has `name: 'falldown'` but was originally named `'elastic'` (pre-existing copy-paste bug from the Vue 2 codebase — corrected during Vue 3 migration)
+- FallDown, Elastic, and Stack variants are marked work-in-progress and have minimal or incomplete animation logic
+- Several variant components manipulate `document.querySelector('#page-wrap')` and `document.querySelector('#app')` directly, coupling them to the demo app's DOM structure
