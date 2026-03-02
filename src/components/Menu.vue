@@ -139,6 +139,27 @@
           ) {
             this.closeMenu();
           }
+        },
+        applyPosition() {
+          var burgerButton = this.$refs.bmBurgerButton;
+          var burgerMenu = this.$refs.sideNav;
+          var crossButton = this.$refs.bmCrossButton;
+          if (!burgerButton || !burgerMenu || !crossButton) {
+            return;
+          }
+          if (this.right) {
+            burgerMenu.style.left = 'auto';
+            burgerMenu.style.right = '0px';
+            burgerButton.style.left = 'auto';
+            burgerButton.style.right = '36px';
+            crossButton.style.right = '250px';
+          } else {
+            if (burgerButton.hasAttribute('style')) {
+              burgerButton.removeAttribute('style');
+              burgerMenu.style.right = 'auto';
+              crossButton.style.right = '0px';
+            }
+          }
         }
       },
       mounted() {
@@ -154,6 +175,7 @@
         crossButton.addEventListener('click', this.closeMenu);
         crossButton.addEventListener('touchstart', this.closeMenu);
 
+        this.applyPosition();
       },
       created: function() {
         document.addEventListener('click', this.documentClick);
@@ -190,36 +212,10 @@
           }
         },
         right: {
-          deep: true,
-          immediate: true,
-          handler(oldValue, newValue) {
-            var burgerButton = this.$refs.bmBurgerButton;
-            var burgerMenu = this.$refs.sideNav;
-            var crossButton = this.$refs.bmCrossButton;
-            if (!burgerButton || !burgerMenu || !crossButton) {
-              // component is not fully-formed
-              return;
-            }
-            if (oldValue) {
-              this.$nextTick(() => {
-                burgerMenu.style.left = 'auto';
-                burgerMenu.style.right = '0px';
-
-                burgerButton.style.left = 'auto';
-                burgerButton.style.right = '36px';
-
-                crossButton.style.right = '250px';
-              });
-            }
-            if (newValue) {
-              if (
-                burgerButton.hasAttribute('style')
-              ) {
-                burgerButton.removeAttribute('style');
-                burgerMenu.style.right = 'auto';
-                crossButton.style.right='0px';
-              }
-            }
+          handler() {
+            this.$nextTick(() => {
+              this.applyPosition();
+            });
           }
         }
       }
