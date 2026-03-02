@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Menu ref="sideNav" v-bind="this.$attrs" @openMenu="openMenu" @closeMenu="closeMenu">
+        <Menu ref="sideNav" v-bind="$attrs" @openMenu="openMenu" @closeMenu="closeMenu">
             <slot></slot>
         </Menu>
     </div>
@@ -9,21 +9,15 @@
 <script>
     import Menu from '../Menu';
     export default {
-      name: 'elastic',
+      name: 'falldown',
+      inheritAttrs: false,
+      emits: ['openMenu', 'closeMenu'],
       components: {
         Menu: Menu
       },
       data() {
         return {
-          bodyOldStyle: '',
-          propsToPass: {
-            isOpen: this.$attrs.isOpen,
-            right: this.$attrs.right,
-            width: this.$attrs.width,
-            disableEsc: this.$attrs.disableEsc,
-            noOverlay: this.$attrs.noOverlay,
-            onStateChange: this.$attrs.onStateChange
-          }
+          bodyOldStyle: ''
         };
       },
       methods : {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Menu v-bind="this.$attrs" @openMenu="push" @closeMenu="pull">
+        <Menu v-bind="$attrs" @openMenu="push" @closeMenu="pull">
             <slot></slot>
         </Menu>
     </div>
@@ -10,6 +10,8 @@
     import Menu from '../Menu';
     export default {
       name: 'scalerotate',
+      inheritAttrs: false,
+      emits: ['openMenu', 'closeMenu'],
       components: {
         Menu: Menu
       },

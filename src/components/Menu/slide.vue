@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Menu v-bind="this.$attrs" @openMenu="openMenu" @closeMenu="closeMenu">
+        <Menu v-bind="$attrs" @openMenu="openMenu" @closeMenu="closeMenu">
             <slot></slot>
         </Menu>
     </div>
@@ -10,6 +10,8 @@
     import Menu from '../Menu';
     export default {
       name: 'slide',
+      inheritAttrs: false,
+      emits: ['openMenu', 'closeMenu'],
       components: {
         Menu: Menu
       },

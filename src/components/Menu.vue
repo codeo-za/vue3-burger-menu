@@ -20,6 +20,7 @@
 <script>
     export default {
       name: 'menubar',
+      emits: ['openMenu', 'closeMenu'],
       data() {
         return {
           isSideBarOpen: false
@@ -88,7 +89,7 @@
             this.$refs.sideNav.style.left = 'auto';
             this.$refs.sideNav.style.right = '0px';
           }
-          this.$nextTick(function() {
+          this.$nextTick(() => {
             this.$refs.sideNav.style.width = this.width
               ? this.width + 'px'
               : '300px';
@@ -157,7 +158,7 @@
       created: function() {
         document.addEventListener('click', this.documentClick);
       },
-      destroyed: function() {
+      unmounted: function() {
         document.removeEventListener('keyup', this.closeMenuOnEsc);
         document.removeEventListener('click', this.documentClick);
 

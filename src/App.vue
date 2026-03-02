@@ -32,8 +32,8 @@
             <h1>
                 <a href="https://github.com/mbj36/vue-burger-menu">vue-burger-menu</a> <br/>
             </h1>
-            <a :class="{ sideButton: true, left: true, active: this.side === 'left' }" @click="changeSide('left')">Left</a>
-            <a :class="{sideButton: true, right: true, active: this.side === 'right' }" @click="changeSide('right')">Right</a>
+            <a :class="{ sideButton: true, left: true, active: side === 'left' }" @click="changeSide('left')">Left</a>
+            <a :class="{sideButton: true, right: true, active: side === 'right' }" @click="changeSide('right')">Right</a>
 
             <h2 class="description">An off-canvas sidebar vue component with a collection of effects and styles using CSS transitions and SVG path animations.</h2>
 

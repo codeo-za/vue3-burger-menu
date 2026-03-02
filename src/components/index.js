@@ -12,6 +12,8 @@ import ScaleRotate from './Menu/scaleRotate'
 import ScaleDown from './Menu/scaleDown'
 import Menu from './Menu'
 
+export { Menu, Slide, Bubble, Reveal, Push, Elastic, FallDown, PushRotate, Stack, ScaleRotate, ScaleDown }
+
 export default {
     Menu,
     Slide,

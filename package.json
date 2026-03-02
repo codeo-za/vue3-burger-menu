@@ -1,19 +1,27 @@
 {
   "name": "vue-burger-menu",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "private": false,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name vue-burger-menu ./src/components/index.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src/"
   },
   "files": [
-    "dist/vue-burger-menu.common.js",
+    "dist/vue-burger-menu.es.js",
     "dist/vue-burger-menu.umd.js"
   ],
+  "main": "./dist/vue-burger-menu.umd.js",
+  "module": "./dist/vue-burger-menu.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-burger-menu.es.js",
+      "require": "./dist/vue-burger-menu.umd.js"
+    }
+  },
   "dependencies": {
-    "vue": "^2.5.17"
+    "vue": "^3.4.0"
   },
   "contributors": [
     {
@@ -56,6 +64,7 @@
   ],
   "keywords": [
     "vuejs",
+    "vue3",
     "menu",
     "hamburger",
     "sidebar"
@@ -65,34 +74,14 @@
     "url": "git+https://github.com/codeo-za/vue-burger-menu.git"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0",
-    "@vue/cli-plugin-eslint": "^3.0.0",
-    "@vue/cli-service": "^3.0.0",
-    "less": "^3.8.1",
-    "less-loader": "^4.1.0",
-    "vue-template-compiler": "^2.5.17"
+    "@vitejs/plugin-vue": "^5.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.20.0",
+    "less": "^4.2.0",
+    "vite": "^5.4.0",
+    "vite-plugin-css-injected-by-js": "^4.0.1"
   },
-  "main": "./dist/vue-burger-menu.common.js",
   "license": "MIT",
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ]
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
