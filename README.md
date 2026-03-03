@@ -32,6 +32,7 @@ yarn add vue-burger-menu
 ### Requirements
 
 - Vue 3.4+
+- Node.js 20.19+
 
 ## Usage
 
