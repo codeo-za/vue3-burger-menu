@@ -59,6 +59,22 @@ Work-in-progress: FallDown, Elastic, Stack
 - Animations use inline style manipulation rather than CSS classes/transitions
 - Vue 3 Options API with `unmounted` lifecycle hook
 
+### Vue 2 → Vue 3 Migration Pitfalls (resolved)
+
+These issues were encountered and fixed during the migration. Documented here to prevent regressions.
+
+**Mount behavior change — no wrapper `<div id="app">` in template:**
+Vue 2's `$mount('#app')` replaced the mount element; Vue 3's `mount('#app')` renders inside it. Having `<div id="app">` in App.vue's template created a nested duplicate, breaking `document.querySelector('#app')` for 3D animations (perspective on the outer div couldn't reach grandchild `#page-wrap` through the intermediate div's default `transform-style: flat`). Fix: App.vue uses Vue 3 fragments (no wrapper div) so the mount container from `index.html` is the sole `#app`.
+
+**Dynamic components — use component objects, not strings:**
+`<component :is="someString">` can fail to reliably re-resolve locally registered components in Vue 3. App.vue uses a `menuComponents` map of `markRaw()`-wrapped component imports and a `currentMenuComponent` computed property that returns the object directly. The `:key="currentMenu"` forces full re-creation on switch.
+
+**`$refs` unavailable during `immediate: true` watchers:**
+Menu.vue's `right` watcher with `immediate: true` fired during `created` (before `mounted`), where `$refs` are undefined. The null-check guard silently returned, so right-side positioning was never applied on fresh mount. Fix: positioning logic extracted into `applyPosition()` method called from both `mounted()` (initial) and the `right` watcher (runtime changes, without `immediate`).
+
+**`$refs` in `unmounted` hook:**
+Vue 3's `unmounted` runs after DOM removal. `$refs` can be null if mount failed or the component tree was torn down mid-render. Menu.vue's `unmounted` hook has null guards around all `$refs` access to prevent `TypeError` from aborting the parent's re-render cycle.
+
 ### Known Issues
 
 - `fallDown.vue` has `name: 'falldown'` but was originally named `'elastic'` (pre-existing copy-paste bug from the Vue 2 codebase — corrected during Vue 3 migration)
