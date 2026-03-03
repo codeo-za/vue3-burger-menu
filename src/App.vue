@@ -1,56 +1,54 @@
 <template>
-    <div id="app">
-        <component :is="currentMenuComponent" :key="currentMenu" :right="side === 'right' ? true: false">
-            <a href="#">
-                <i class="fa fa-fw fa-star-o"></i>
-                <span>Favourites</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-bell-o"></i>
-                <span>Alerts</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-envelope-o"></i>
-                <span>Messages</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-comment-o"></i>
-                <span>Comments</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-bar-chart-o"></i>
-                <span>Analytics</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-newspaper-o"></i>
-                <span>Reading</span>
-            </a>
-        </component>
-        <main id="page-wrap">
-            <img src="https://img.shields.io/npm/dt/vue-burger-menu.svg" /> &emsp;
-            <img src="https://img.shields.io/github/stars/mbj36/vue-burger-menu.svg" />
-            <h1>
-                <a href="https://github.com/mbj36/vue-burger-menu">vue-burger-menu</a> <br/>
-            </h1>
-            <a :class="{ sideButton: true, left: true, active: side === 'left' }" @click="changeSide('left')">Left</a>
-            <a :class="{sideButton: true, right: true, active: side === 'right' }" @click="changeSide('right')">Right</a>
+    <component :is="currentMenuComponent" :key="currentMenu" :right="side === 'right' ? true: false">
+        <a href="#">
+            <i class="fa fa-fw fa-star-o"></i>
+            <span>Favourites</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-bell-o"></i>
+            <span>Alerts</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-envelope-o"></i>
+            <span>Messages</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-comment-o"></i>
+            <span>Comments</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-bar-chart-o"></i>
+            <span>Analytics</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-newspaper-o"></i>
+            <span>Reading</span>
+        </a>
+    </component>
+    <main id="page-wrap">
+        <img src="https://img.shields.io/npm/dt/vue-burger-menu.svg" /> &emsp;
+        <img src="https://img.shields.io/github/stars/mbj36/vue-burger-menu.svg" />
+        <h1>
+            <a href="https://github.com/mbj36/vue-burger-menu">vue-burger-menu</a> <br/>
+        </h1>
+        <a :class="{ sideButton: true, left: true, active: side === 'left' }" @click="changeSide('left')">Left</a>
+        <a :class="{sideButton: true, right: true, active: side === 'right' }" @click="changeSide('right')">Right</a>
 
-            <h2 class="description">An off-canvas sidebar vue 3 component with a collection of effects and styles using CSS transitions and SVG path animations.</h2>
+        <h2 class="description">An off-canvas sidebar vue 3 component with a collection of effects and styles using CSS transitions and SVG path animations.</h2>
 
-            <nav class="demo-buttons">
-                <span v-for="(menu, index) in menus" :key="index">
-                    <span>
-                        <a :class="currentMenu === menu.buttonText.replace(/ +/g, '').toLowerCase() ? {currentDemo:true}: {currentDemo:false}" @click="changeMenu(menu.buttonText)">
-                            {{menu.buttonText}}
-                        </a>
-                    </span>
+        <nav class="demo-buttons">
+            <span v-for="(menu, index) in menus" :key="index">
+                <span>
+                    <a :class="currentMenu === menu.buttonText.replace(/ +/g, '').toLowerCase() ? {currentDemo:true}: {currentDemo:false}" @click="changeMenu(menu.buttonText)">
+                        {{menu.buttonText}}
+                    </a>
                 </span>
-            </nav>
-            Inspired by
-            <a href="https://github.com/codrops/OffCanvasMenuEffects">Off-Canvas Menu Effects</a> and
-            <a href="https://github.com/codrops/SidebarTransitions">Sidebar Transitions</a> by Codrops
-        </main>
-    </div>
+            </span>
+        </nav>
+        Inspired by
+        <a href="https://github.com/codrops/OffCanvasMenuEffects">Off-Canvas Menu Effects</a> and
+        <a href="https://github.com/codrops/SidebarTransitions">Sidebar Transitions</a> by Codrops
+    </main>
 </template>
 
 <script>
