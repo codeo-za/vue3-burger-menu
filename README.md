@@ -79,43 +79,40 @@ ATTENTION - the below animations are work-in-progress:
 
 ### Properties
 
-Some animations require certain other elements on your page:
+Some animations apply 3D CSS transforms to surrounding page elements. These animations require specific element IDs in your DOM:
 
-* Page wrapper - an element wrapping the rest of the content on your page, placed after the menu component
+* **`#page-wrap`** - an element wrapping the rest of the content on your page, placed as a sibling after the menu component
+* **`#app`** - an element containing everything, including the menu component and `#page-wrap`
 
-```html
-<Menu/>
+**Important:** `#page-wrap` must be a **direct child** of `#app` for 3D perspective animations to work correctly. Do not add extra wrapper divs between them.
 
-<main id="page-wrap">
-.
-.
-</main>
-
-```
-
-* Outer container called `app` - an element containing everything including the menu component
+If you use Vue 3's `createApp(App).mount('#app')`, the mount container already provides `#app`. Your App component should use [fragments](https://vuejs.org/guide/extras/web-components.html) (no root wrapper div) so that the menu and `#page-wrap` render directly inside the mount container:
 
 ```html
-<div id="app">
-    <Menu/>
+<!-- index.html -->
+<div id="app"></div>
+
+<!-- App.vue template (no wrapper div — uses Vue 3 fragments) -->
+<template>
+    <Slide>
+      <a href="#">Home</a>
+    </Slide>
     <main id="page-wrap">
-    .
-    .
-    .
+      <!-- your page content -->
     </main>
-</div>
+</template>
 ```
 
 Check this table to see which animations require these elements:
 
-Animation | `page-wrap` | `app`
---- | :---: | :---:
-`Slide` | |
-`Push` | &#x2713; | &#x2713;
-`PushRotate` |  &#x2713;  |  &#x2713;
-`ScaleDown` |  &#x2713;  |  &#x2713;
-`ScaleRotate` |  &#x2713;  |  &#x2713;
-`Reveal` |  &#x2713;  |  &#x2713;
+| Animation | `#page-wrap` | `#app` |
+| --- | :---: | :---: |
+| `Slide` | | |
+| `Push` | &#x2713; | &#x2713; |
+| `PushRotate` | &#x2713; | &#x2713; |
+| `ScaleDown` | &#x2713; | &#x2713; |
+| `ScaleRotate` | &#x2713; | &#x2713; |
+| `Reveal` | &#x2713; | |
 
 ### Position
 
