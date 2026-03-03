@@ -75,6 +75,16 @@ Menu.vue's `right` watcher with `immediate: true` fired during `created` (before
 **`$refs` in `unmounted` hook:**
 Vue 3's `unmounted` runs after DOM removal. `$refs` can be null if mount failed or the component tree was torn down mid-render. Menu.vue's `unmounted` hook has null guards around all `$refs` access to prevent `TypeError` from aborting the parent's re-render cycle.
 
+### Vite 5 → 7 Upgrade Notes
+
+The project was upgraded from Vite 5.4.21 directly to Vite 7.3.1 (skipping Vite 6), along with `@vitejs/plugin-vue` 5 → 6. Key findings:
+
+- **No `vite.config.js` changes required** — `__dirname` continues to work because Vite 7 bundles the config file (now with Rolldown instead of esbuild) before executing it. Library mode, plugin config, and rollup options are all compatible.
+- **No `"type": "module"` needed in `package.json`** — Vite 7 is ESM-only internally but does not require the consuming project to set this field.
+- **`vite-plugin-css-injected-by-js`** — Compatible as-is; its peer dep `>2.0.0-0` covers Vite 7.
+- **Node.js requirement** — Vite 7 requires Node.js `>=20.19.0`.
+- **CJS deprecation warning eliminated** — Vite 5 logged a CJS deprecation warning on every invocation; Vite 7 (ESM-only) does not.
+
 ### Known Issues
 
 - `fallDown.vue` has `name: 'falldown'` but was originally named `'elastic'` (pre-existing copy-paste bug from the Vue 2 codebase — corrected during Vue 3 migration)
