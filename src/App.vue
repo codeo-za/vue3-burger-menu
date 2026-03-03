@@ -35,7 +35,7 @@
             <a :class="{ sideButton: true, left: true, active: side === 'left' }" @click="changeSide('left')">Left</a>
             <a :class="{sideButton: true, right: true, active: side === 'right' }" @click="changeSide('right')">Right</a>
 
-            <h2 class="description">An off-canvas sidebar vue component with a collection of effects and styles using CSS transitions and SVG path animations.</h2>
+            <h2 class="description">An off-canvas sidebar vue 3 component with a collection of effects and styles using CSS transitions and SVG path animations.</h2>
 
             <nav class="demo-buttons">
                 <span v-for="(menu, index) in menus" :key="index">
