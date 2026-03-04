@@ -12,8 +12,8 @@ Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multip
 - **Build library:** `npm run build` (outputs ES + UMD to `dist/`)
 - **Preview built app:** `npm run preview`
 - **Lint:** `npm run lint` (ESLint with `plugin:vue/vue3-essential` + `eslint:recommended`)
-
-There are no tests configured.
+- **Test:** `npm run test` (Vitest, runs all `*.spec.js` files)
+- **Test (watch):** `npm run test:watch` (Vitest in watch mode)
 
 ## Architecture
 
