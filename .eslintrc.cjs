@@ -8,9 +8,20 @@ module.exports = {
     'plugin:vue/vue3-essential',
     'eslint:recommended'
   ],
-  rules: {},
+  rules: {
+    'vue/multi-word-component-names': 'off',
+    'vue/no-reserved-component-names': 'off'
+  },
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module'
-  }
+  },
+  overrides: [
+    {
+      files: ['*.ts', '*.vue'],
+      parserOptions: {
+        parser: '@typescript-eslint/parser'
+      }
+    }
+  ]
 }

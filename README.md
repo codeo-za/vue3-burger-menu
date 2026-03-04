@@ -266,8 +266,9 @@ npm install
 npm run dev          # start dev server
 npm run test         # run tests
 npm run test:watch   # run tests in watch mode
+npm run typecheck    # type-check with vue-tsc
 npm run lint         # lint source files
-npm run build        # build library to dist/
+npm run build        # type-check + build library to dist/
 ```
 
 ## Browser Support

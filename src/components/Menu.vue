@@ -17,8 +17,10 @@
     </div>
 </template>
 
-<script>
-    export default {
+<script lang="ts">
+    import { defineComponent } from 'vue';
+
+    export default defineComponent({
       name: 'menubar',
       emits: ['openMenu', 'closeMenu'],
       data() {
@@ -36,7 +38,7 @@
           required: false
         },
         width: {
-          type: [String],
+          type: String,
           required: false,
           default: '300'
         },
@@ -46,10 +48,6 @@
         },
         noOverlay: {
           type: Boolean,
-          required: false
-        },
-        onStateChange: {
-          type: Function,
           required: false
         },
         burgerIcon: {
@@ -69,7 +67,7 @@
         }
       },
       methods: {
-        openMenu(e) {
+        openMenu(e?: Event) {
           if (e){
             e.stopPropagation();
             e.preventDefault();
@@ -86,18 +84,18 @@
             document.body.className += 'bm-overlay';
           }
           if (this.right) {
-            this.$refs.sideNav.style.left = 'auto';
-            this.$refs.sideNav.style.right = '0px';
+            (this.$refs.sideNav as HTMLElement).style.left = 'auto';
+            (this.$refs.sideNav as HTMLElement).style.right = '0px';
           }
           this.$nextTick(() => {
-            this.$refs.sideNav.style.width = this.width
+            (this.$refs.sideNav as HTMLElement).style.width = this.width
               ? this.width + 'px'
               : '300px';
           });
           return false;
         },
 
-        closeMenu(e) {
+        closeMenu(e?: Event) {
           if (e){
             e.stopPropagation();
             e.preventDefault();
@@ -112,28 +110,25 @@
             'bm-overlay',
             ''
           );
-          this.$refs.sideNav.style.width = '0px';
+          (this.$refs.sideNav as HTMLElement).style.width = '0px';
           return false;
         },
 
-        closeMenuOnEsc(e) {
-          e = e || window.event;
+        closeMenuOnEsc(e: KeyboardEvent) {
           if (e.key === 'Escape' || e.keyCode === 27) {
             this.closeMenu();
           }
         },
-        documentClick(e) {
-          let element = this.$refs.bmBurgerButton;
-          let target = null;
-          if (e && e.target) {
-            target = e.target;
-          }
+        documentClick(e: MouseEvent) {
+          const element = this.$refs.bmBurgerButton as HTMLElement | undefined;
+          const target = e.target as HTMLElement | null;
 
           if (
             element &&
+            target &&
             element !== target &&
             !element.contains(target) &&
-            e.target.className !== 'bm-menu' &&
+            target.className !== 'bm-menu' &&
             this.isSideBarOpen &&
             !this.disableOutsideClick
           ) {
@@ -141,9 +136,9 @@
           }
         },
         applyPosition() {
-          var burgerButton = this.$refs.bmBurgerButton;
-          var burgerMenu = this.$refs.sideNav;
-          var crossButton = this.$refs.bmCrossButton;
+          const burgerButton = this.$refs.bmBurgerButton as HTMLElement | undefined;
+          const burgerMenu = this.$refs.sideNav as HTMLElement | undefined;
+          const crossButton = this.$refs.bmCrossButton as HTMLElement | undefined;
           if (!burgerButton || !burgerMenu || !crossButton) {
             return;
           }
@@ -167,30 +162,30 @@
           document.addEventListener('keyup', this.closeMenuOnEsc);
         }
 
-        const burgerButton = this.$refs.bmBurgerButton;
+        const burgerButton = this.$refs.bmBurgerButton as HTMLElement;
         burgerButton.addEventListener('touchstart', this.openMenu);
         burgerButton.addEventListener('click', this.openMenu);
 
-        const crossButton = this.$refs.bmCrossButton;
+        const crossButton = this.$refs.bmCrossButton as HTMLElement;
         crossButton.addEventListener('click', this.closeMenu);
         crossButton.addEventListener('touchstart', this.closeMenu);
 
         this.applyPosition();
       },
-      created: function() {
+      created() {
         document.addEventListener('click', this.documentClick);
       },
-      unmounted: function() {
+      unmounted() {
         document.removeEventListener('keyup', this.closeMenuOnEsc);
         document.removeEventListener('click', this.documentClick);
 
-        const burgerButton = this.$refs.bmBurgerButton;
+        const burgerButton = this.$refs.bmBurgerButton as HTMLElement | undefined;
         if (burgerButton) {
           burgerButton.removeEventListener('touchstart', this.openMenu);
           burgerButton.removeEventListener('click', this.openMenu);
         }
 
-        const crossButton = this.$refs.bmCrossButton;
+        const crossButton = this.$refs.bmCrossButton as HTMLElement | undefined;
         if (crossButton) {
           crossButton.removeEventListener('click', this.closeMenu);
           crossButton.removeEventListener('touchstart', this.closeMenu);
@@ -200,7 +195,7 @@
         isOpen: {
           deep: true,
           immediate: true,
-          handler(newValue, oldValue) {
+          handler(newValue: boolean, oldValue: boolean) {
             this.$nextTick(() => {
               if (!oldValue && newValue) {
                 this.openMenu();
@@ -219,7 +214,7 @@
           }
         }
       }
-    };
+    });
 </script>
 
 <style>

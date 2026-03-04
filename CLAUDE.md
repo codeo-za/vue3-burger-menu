@@ -4,32 +4,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multiple CSS animation styles. Published on npm as `vue-burger-menu`. Uses Vite 7 for build tooling and Options API throughout.
+Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multiple CSS animation styles. Published on npm as `vue-burger-menu`. Uses Vite 7 for build tooling, TypeScript with `defineComponent` + Options API throughout.
 
 ## Commands
 
 - **Dev server:** `npm run dev` (Vite, localhost:5173)
-- **Build library:** `npm run build` (outputs ES + UMD to `dist/`)
+- **Build library:** `npm run build` (type-checks with `vue-tsc` then outputs ES + UMD to `dist/`)
 - **Preview built app:** `npm run preview`
+- **Typecheck:** `npm run typecheck` (`vue-tsc --noEmit`)
 - **Lint:** `npm run lint` (ESLint with `plugin:vue/vue3-essential` + `eslint:recommended`)
-- **Test:** `npm run test` (Vitest, runs all `*.spec.js` files)
+- **Test:** `npm run test` (Vitest, runs all `*.spec.ts` files)
 - **Test (watch):** `npm run test:watch` (Vitest in watch mode)
 
 ## Project Structure
 
 ```
 ├── index.html                     # Demo app HTML shell (mounts into <div id="app">)
-├── vite.config.js                 # Vite config: library build, Vue plugin, test config
+├── vite.config.ts                 # Vite config: library build, Vue plugin, test config
+├── tsconfig.json                  # TypeScript config (extends @vue/tsconfig)
+├── tsconfig.node.json             # TypeScript config for vite.config.ts
 ├── package.json                   # npm package config (publishes dist/ only)
-├── .eslintrc.cjs                  # ESLint config (vue3-essential + eslint:recommended)
+├── .eslintrc.cjs                  # ESLint config (vue3-essential + eslint:recommended + TS parser)
 ├── src/
-│   ├── main.js                    # Demo app entry: createApp(App).mount('#app')
+│   ├── main.ts                    # Demo app entry: createApp(App).mount('#app')
+│   ├── env.d.ts                   # Vue SFC shim + Vite client types
 │   ├── App.vue                    # Demo app: menu switcher UI with left/right toggle
 │   ├── assets/
 │   │   └── logo.png
 │   └── components/
 │       ├── Menu.vue               # Base menu component (all shared logic)
-│       ├── index.js               # Library entry: barrel file with named + default exports
+│       ├── index.ts               # Library entry: barrel file with named + default exports
 │       ├── Menu/                  # Animation variant wrappers
 │       │   ├── slide.vue
 │       │   ├── push.vue
@@ -42,8 +46,8 @@ Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multip
 │       │   ├── elastic.vue        # WIP (passthrough stub)
 │       │   └── stack.vue          # WIP (passthrough stub)
 │   └── tests/
-│       ├── Menu.spec.js           # Base component tests (21 tests)
-│       └── Menu-variants.spec.js  # Variant wrapper tests (46 tests)
+│       ├── Menu.spec.ts           # Base component tests (21 tests)
+│       └── Menu-variants.spec.ts  # Variant wrapper tests (46 tests)
 └── dist/                          # Build output (committed)
     ├── vue-burger-menu.es.js      # ES module bundle
     └── vue-burger-menu.umd.js     # UMD bundle
@@ -67,11 +71,11 @@ Animation Variant (e.g., Slide, Push, ScaleRotate)
 
 **`src/components/Menu/*.vue`** — Animation variant wrappers. Each wraps `Menu.vue`, passes props through via `v-bind="$attrs"` with `inheritAttrs: false`, and hooks into `@openMenu`/`@closeMenu` events to apply animation-specific DOM transforms. Some variants (Push, ScaleDown, ScaleRotate, PushRotate, Reveal) use `document.querySelector('#page-wrap')` and `document.querySelector('#app')` to animate the surrounding page.
 
-**`src/components/index.js`** — Barrel file exporting all variants as both named and default exports. This is the library entry point for the Vite build.
+**`src/components/index.ts`** — Barrel file exporting all variants as both named and default exports. This is the library entry point for the Vite build.
 
 ### Demo App
 
-**`index.html`** → **`src/main.js`** → **`src/App.vue`**
+**`index.html`** → **`src/main.ts`** → **`src/App.vue`**
 
 The demo app provides a menu switcher UI. App.vue uses Vue 3 fragments (no wrapper `<div>`) so the `<div id="app">` from `index.html` is the sole `#app` element — this is critical for 3D animation variants that set `perspective` on `#app`. App.vue uses a `menuComponents` map of `markRaw()`-wrapped component objects with a `currentMenuComponent` computed property and `:key="currentMenu"` to force full re-creation on menu type switch. The `<main id="page-wrap">` element is the target for page-transform animations. Styles use Less.
 
@@ -92,7 +96,7 @@ Work-in-progress: FallDown, Elastic, Stack
 
 ### Build Configuration
 
-- **`vite.config.js`**: Library mode build targeting `src/components/index.js`, outputs ES and UMD formats, externalizes `vue`
+- **`vite.config.ts`**: Library mode build targeting `src/components/index.ts`, outputs ES and UMD formats, externalizes `vue`
 - CSS is injected into the DOM at runtime via `vite-plugin-css-injected-by-js` (matches the old Vue CLI `css.extract: false` behavior — consumers just import JS, no separate CSS import needed)
 - `resolve.extensions` includes `.vue` — Vite does not resolve `.vue` extensions by default (unlike webpack/Vue CLI), so this is required for the extensionless imports throughout the codebase
 - Rollup output uses `exports: 'named'` to avoid UMD consumer issues with mixed named/default exports
@@ -103,12 +107,12 @@ Work-in-progress: FallDown, Elastic, Stack
 
 **Runtime:** `vue ^3.4.0`
 
-**Dev:** `vite ^7.3.1`, `@vitejs/plugin-vue ^6.0.0`, `vite-plugin-css-injected-by-js ^4.0.1`, `eslint ^8.56.0`, `eslint-plugin-vue ^9.20.0`, `less ^4.2.0`, `vitest ^4.0.18`, `@vue/test-utils ^2.4.6`, `jsdom ^28.1.0`
+**Dev:** `vite ^7.3.1`, `@vitejs/plugin-vue ^6.0.0`, `vite-plugin-css-injected-by-js ^4.0.1`, `typescript ~5.8`, `vue-tsc ^2`, `@vue/tsconfig ^0.7`, `@types/node ^22`, `@typescript-eslint/parser ^8`, `eslint ^8.56.0`, `eslint-plugin-vue ^9.20.0`, `less ^4.2.0`, `vitest ^4.0.18`, `@vue/test-utils ^2.4.6`, `jsdom ^28.1.0`
 
 ### Test Setup
 
-- **Stack:** Vitest 4 + `@vue/test-utils` 2 + jsdom — configured via the `test` block in `vite.config.js` (reuses the Vue plugin and resolve config automatically)
-- **Files:** `src/tests/Menu.spec.js` (base component, 21 tests) and `src/tests/Menu-variants.spec.js` (all 7 working variants, 46 tests)
+- **Stack:** Vitest 4 + `@vue/test-utils` 2 + jsdom — configured via the `test` block in `vite.config.ts` (reuses the Vue plugin and resolve config automatically)
+- **Files:** `src/tests/Menu.spec.ts` (base component, 21 tests) and `src/tests/Menu-variants.spec.ts` (all 7 working variants, 46 tests)
 - **`attachTo: document.body`** is required when mounting — Menu.vue registers event listeners on `document` in `created()` and `mounted()`, so the component must be in the real DOM for clicks, Escape key, and outside-click tests to work
 - **`flushPromises()`** needed after every interaction — Menu.vue uses `$nextTick` to apply width changes, so assertions against `style.width` fail without flushing
 - **Mock DOM elements for variant transforms** — variants that manipulate `#page-wrap` and `#app` (Push, Reveal, ScaleDown, ScaleRotate, PushRotate) need these elements created in `beforeEach` and removed in `afterEach`
@@ -124,7 +128,9 @@ Work-in-progress: FallDown, Elastic, Stack
 - All components declare `emits: ['openMenu', 'closeMenu']`
 - Wrapper components use `inheritAttrs: false` to control attribute forwarding
 - Animations use inline style manipulation rather than CSS classes/transitions
-- Vue 3 Options API with `unmounted` lifecycle hook
+- Vue 3 Options API with `defineComponent` and `unmounted` lifecycle hook
+- All Vue SFCs use `<script lang="ts">` with `defineComponent` from `vue`
+- `src/env.d.ts` provides the Vue SFC type shim (`declare module '*.vue'`) and Vite client types
 
 ### Vue 2 → Vue 3 Migration Pitfalls (resolved)
 
@@ -146,7 +152,7 @@ Vue 3's `unmounted` runs after DOM removal. `$refs` can be null if mount failed 
 
 The project was upgraded from Vite 5.4.21 directly to Vite 7.3.1 (skipping Vite 6), along with `@vitejs/plugin-vue` 5 → 6. Key findings:
 
-- **No `vite.config.js` changes required** — `__dirname` continues to work because Vite 7 bundles the config file (now with Rolldown instead of esbuild) before executing it. Library mode, plugin config, and rollup options are all compatible.
+- **No vite config changes required** — `__dirname` continues to work because Vite 7 bundles the config file (now with Rolldown instead of esbuild) before executing it. Library mode, plugin config, and rollup options are all compatible. Config has since been renamed to `vite.config.ts`.
 - **No `"type": "module"` needed in `package.json`** — Vite 7 is ESM-only internally but does not require the consuming project to set this field.
 - **`vite-plugin-css-injected-by-js`** — Compatible as-is; its peer dep `>2.0.0-0` covers Vite 7.
 - **Node.js requirement** — Vite 7 requires Node.js `>=20.19.0`.

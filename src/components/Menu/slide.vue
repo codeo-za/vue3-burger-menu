@@ -6,9 +6,10 @@
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
+<script lang="ts">
+    import { defineComponent } from 'vue';
+    import Menu from '../Menu.vue';
+    export default defineComponent({
       name: 'slide',
       inheritAttrs: false,
       emits: ['openMenu', 'closeMenu'],
@@ -23,7 +24,7 @@
           this.$emit('closeMenu');
         }
       }
-    };
+    });
 </script>
 
 

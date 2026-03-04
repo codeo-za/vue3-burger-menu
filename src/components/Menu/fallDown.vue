@@ -6,9 +6,10 @@
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
+<script lang="ts">
+    import { defineComponent } from 'vue';
+    import Menu from '../Menu.vue';
+    export default defineComponent({
       name: 'falldown',
       inheritAttrs: false,
       emits: ['openMenu', 'closeMenu'],
@@ -21,44 +22,53 @@
         };
       },
       methods : {
+          getBmMenu(): HTMLElement | null {
+            const menuEl = (this.$refs.sideNav as InstanceType<typeof Menu>).$el as HTMLElement;
+            return menuEl.querySelector<HTMLElement>('.bm-menu');
+          },
           openMenu () {
             this.$emit("openMenu")
-            let width = this.$attrs.width ? this.$attrs.width + 'px' : '300px';
-            this.$refs.sideNav.$el.querySelector('.bm-menu').style.overflowY = 'hidden';
+            const width = (this.$attrs.width as string | undefined) ? this.$attrs.width + 'px' : '300px';
+            const bmMenu = this.getBmMenu();
+            if (!bmMenu) return;
+            bmMenu.style.overflowY = 'hidden';
             this.bodyOldStyle = document.body.getAttribute('style') || '';
             document.body.style.overflowX = 'hidden';
-            this.$refs.sideNav.$el.querySelector('.bm-menu').style.transition='0.5s';
+            bmMenu.style.transition='0.5s';
+
+          const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+          if (!pageWrap) return;
 
           if (this.$attrs.right) {
-             document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(-${width}, 0px, 0px )`;
+            pageWrap.style.transform = `translate3d(-${width}, 0px, 0px )`;
           } else {
-             document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(${width}, 0px, 0px )`;
+            pageWrap.style.transform = `translate3d(${width}, 0px, 0px )`;
           }
 
-             document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
+          pageWrap.style.transition = 'all 0.5s ease 0s';
 
             this.$nextTick(() => {
-              this.$refs.sideNav.$el.querySelector('.bm-menu').style.height='100%';
+              const menu = this.getBmMenu();
+              if (menu) menu.style.height='100%';
               });
 
           },
           closeMenu () {
             this.$emit("closeMenu")
-            document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-            document.querySelector('#page-wrap').style.transform = '';
+            const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+            if (pageWrap) {
+              pageWrap.style.transition = 'all 0.5s ease 0s';
+              pageWrap.style.transform = '';
+            }
             document.body.setAttribute('style', this.bodyOldStyle);
-            this.$refs.sideNav.$el.querySelector('.bm-menu').style.height='0px';
+            const bmMenu = this.getBmMenu();
+            if (bmMenu) bmMenu.style.height='0px';
 
           }
       },
       mounted () {
-        this.$refs.sideNav.$el.querySelector('.bm-menu').style.height='0px';
+        const bmMenu = this.getBmMenu();
+        if (bmMenu) bmMenu.style.height='0px';
       }
-    };
+    });
 </script>

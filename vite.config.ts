@@ -13,7 +13,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/components/index.js'),
+      entry: resolve(__dirname, 'src/components/index.ts'),
       name: 'VueBurgerMenu',
       formats: ['es', 'umd'],
       fileName: (format) => `vue-burger-menu.${format}.js`

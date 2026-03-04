@@ -51,23 +51,23 @@
     </main>
 </template>
 
-<script>
-    import { markRaw } from 'vue';
-    import slide from './components/Menu/slide';
-    import bubble from './components/Menu/bubble';
-    import elastic from './components/Menu/elastic';
-    import falldown from './components/Menu/fallDown';
-    import push from './components/Menu/push';
-    import pushrotate from './components/Menu/pushRotate';
-    import reveal from './components/Menu/reveal';
-    import scaledown from './components/Menu/scaleDown';
-    import scalerotate from './components/Menu/scaleRotate';
-    import stack from './components/Menu/stack';
-    import Menu from './components/Menu';
+<script lang="ts">
+    import { defineComponent, markRaw, type Component } from 'vue';
+    import slide from './components/Menu/slide.vue';
+    import bubble from './components/Menu/bubble.vue';
+    import elastic from './components/Menu/elastic.vue';
+    import falldown from './components/Menu/fallDown.vue';
+    import push from './components/Menu/push.vue';
+    import pushrotate from './components/Menu/pushRotate.vue';
+    import reveal from './components/Menu/reveal.vue';
+    import scaledown from './components/Menu/scaleDown.vue';
+    import scalerotate from './components/Menu/scaleRotate.vue';
+    import stack from './components/Menu/stack.vue';
+    import Menu from './components/Menu.vue';
 
     // Vue 3 requires markRaw for component objects stored in reactive state
     // to prevent them from being wrapped in a reactive proxy
-    const menuComponents = {
+    const menuComponents: Record<string, Component> = {
       slide: markRaw(slide),
       bubble: markRaw(bubble),
       elastic: markRaw(elastic),
@@ -80,7 +80,7 @@
       stack: markRaw(stack),
     };
 
-    export default {
+    export default defineComponent({
       data() {
         return {
           menus: {
@@ -113,20 +113,20 @@
         Menu
       },
       computed: {
-        currentMenuComponent() {
+        currentMenuComponent(): Component {
           return menuComponents[this.currentMenu];
         }
       },
       methods: {
-        changeMenu(menu) {
+        changeMenu(menu: string) {
           this.currentMenu = menu.replace(/ +/g, '').toLowerCase();
           return this.currentMenu;
         },
-        changeSide(side) {
+        changeSide(side: string) {
           this.side = side;
         }
       }
-    };
+    });
 </script>
 
  <style lang="less">

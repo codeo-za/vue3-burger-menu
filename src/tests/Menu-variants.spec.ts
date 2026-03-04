@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
+import type { Component } from 'vue'
 import { Slide, Push, Bubble, Reveal, ScaleDown, ScaleRotate, PushRotate } from '../components/index'
 
 // All working variants
@@ -14,9 +15,9 @@ const allVariants = {
 }
 
 describe('Variant wrappers', () => {
-  let wrapper
-  let pageWrap
-  let appDiv
+  let wrapper: VueWrapper | null
+  let pageWrap: HTMLDivElement
+  let appDiv: HTMLDivElement
 
   beforeEach(() => {
     // Create mock DOM elements for variants that query #page-wrap and #app
@@ -40,7 +41,7 @@ describe('Variant wrappers', () => {
     appDiv?.remove()
   })
 
-  function mountVariant(Component, props = {}, slots = {}) {
+  function mountVariant(Component: Component, props = {}, slots = {}) {
     wrapper = mount(Component, {
       props,
       slots,
@@ -50,12 +51,12 @@ describe('Variant wrappers', () => {
   }
 
   async function openMenu() {
-    await wrapper.find('.bm-burger-button').trigger('click')
+    await wrapper!.find('.bm-burger-button').trigger('click')
     await flushPromises()
   }
 
   async function closeMenu() {
-    await wrapper.find('.bm-cross-button').trigger('click')
+    await wrapper!.find('.bm-cross-button').trigger('click')
     await flushPromises()
   }
 
@@ -63,7 +64,7 @@ describe('Variant wrappers', () => {
     for (const [name, Component] of Object.entries(allVariants)) {
       it(`${name} renders slot content inside the menu`, () => {
         mountVariant(Component, {}, { default: '<span class="test-item">Hello</span>' })
-        expect(wrapper.find('.bm-item-list .test-item').exists()).toBe(true)
+        expect(wrapper!.find('.bm-item-list .test-item').exists()).toBe(true)
       })
     }
   })
@@ -73,7 +74,7 @@ describe('Variant wrappers', () => {
       it(`${name} passes width prop through to Menu`, async () => {
         mountVariant(Component, { width: '400' })
         await openMenu()
-        expect(wrapper.find('.bm-menu').element.style.width).toBe('400px')
+        expect(wrapper!.find('.bm-menu').element.style.width).toBe('400px')
       })
     }
   })
@@ -83,14 +84,14 @@ describe('Variant wrappers', () => {
       it(`${name} emits openMenu exactly once when menu opens`, async () => {
         mountVariant(Component)
         await openMenu()
-        expect(wrapper.emitted('openMenu')).toHaveLength(1)
+        expect(wrapper!.emitted('openMenu')).toHaveLength(1)
       })
 
       it(`${name} emits closeMenu exactly once when menu closes`, async () => {
         mountVariant(Component)
         await openMenu()
         await closeMenu()
-        expect(wrapper.emitted('closeMenu')).toHaveLength(1)
+        expect(wrapper!.emitted('closeMenu')).toHaveLength(1)
       })
     }
   })
@@ -241,7 +242,7 @@ describe('Variant wrappers', () => {
     it('applies borderRadius to .bm-menu on open', async () => {
       mountVariant(Bubble)
       await openMenu()
-      const bmMenu = wrapper.find('.bm-menu').element
+      const bmMenu = wrapper!.find('.bm-menu').element
       expect(bmMenu.style.borderRadius).toBe('150% / 70%')
     })
 
@@ -253,7 +254,7 @@ describe('Variant wrappers', () => {
       vi.advanceTimersByTime(300)
       await flushPromises()
 
-      const bmMenu = wrapper.find('.bm-menu').element
+      const bmMenu = wrapper!.find('.bm-menu').element
       expect(bmMenu.style.borderRadius).toBe('0px')
 
       vi.useRealTimers()
@@ -263,7 +264,7 @@ describe('Variant wrappers', () => {
       mountVariant(Bubble)
       await openMenu()
       await closeMenu()
-      const bmMenu = wrapper.find('.bm-menu').element
+      const bmMenu = wrapper!.find('.bm-menu').element
       expect(bmMenu.style.transitionTimingFunction).toBe('')
     })
   })

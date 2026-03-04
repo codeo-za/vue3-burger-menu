@@ -4,8 +4,9 @@
   "private": false,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -76,15 +77,20 @@
     "url": "git+https://github.com/codeo-za/vue-burger-menu.git"
   },
   "devDependencies": {
+    "@types/node": "^22.19.13",
+    "@typescript-eslint/parser": "^8.56.1",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.7.0",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.20.0",
     "jsdom": "^28.1.0",
     "less": "^4.2.0",
+    "typescript": "~5.8",
     "vite": "^7.3.1",
     "vite-plugin-css-injected-by-js": "^4.0.1",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "vue-tsc": "^2.2.12"
   },
   "license": "MIT",
   "browserslist": [

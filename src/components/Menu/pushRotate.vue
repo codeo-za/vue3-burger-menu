@@ -6,9 +6,10 @@
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
+<script lang="ts">
+    import { defineComponent } from 'vue';
+    import Menu from '../Menu.vue';
+    export default defineComponent({
       name: 'pushrotate',
       inheritAttrs: false,
       emits: ['openMenu', 'closeMenu'],
@@ -30,47 +31,47 @@
         },
         push() {
           this.openMenu()
-          let width = this.$attrs.width ? this.$attrs.width + 'px' : '300px';
+          const width = (this.$attrs.width as string | undefined) ? this.$attrs.width + 'px' : '300px';
 
           this.bodyOldStyle = document.body.getAttribute('style') || '';
           document.body.style.overflowX = 'hidden';
 
+          const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+          const appEl = document.querySelector<HTMLElement>('#app');
+          if (!pageWrap || !appEl) return;
+
           if (this.$attrs.right) {
-            document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(-${width}, 0px, 0px ) rotateY(15deg)`;
-            document.querySelector('#page-wrap').style.transformOrigin =
-              '100% 50% 0px';
+            pageWrap.style.transform = `translate3d(-${width}, 0px, 0px ) rotateY(15deg)`;
+            pageWrap.style.transformOrigin = '100% 50% 0px';
           } else {
-            document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(${width}, 0px, 0px ) rotateY(-15deg)`;
-            document.querySelector('#page-wrap').style.transformOrigin =
-              '0% 50% 0px';
+            pageWrap.style.transform = `translate3d(${width}, 0px, 0px ) rotateY(-15deg)`;
+            pageWrap.style.transformOrigin = '0% 50% 0px';
           }
 
-          document.querySelector('#page-wrap').style.transformStyle = 'preserve-3d';
+          pageWrap.style.transformStyle = 'preserve-3d';
+          pageWrap.style.transition = 'all 0.5s ease 0s';
 
-          document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-          this.appOldStyle = document.querySelector('#app').getAttribute('style') || '';
-
-          document.querySelector('#app').style.perspective = '1500px';
-          document.querySelector('#app').style.overflow = 'hidden';
+          this.appOldStyle = appEl.getAttribute('style') || '';
+          appEl.style.perspective = '1500px';
+          appEl.style.overflow = 'hidden';
         },
         pull() {
           this.closeMenu()
-          document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-          document.querySelector('#page-wrap').style.transform = '';
-          document.querySelector('#page-wrap').style.transformStyle = '';
-          document.querySelector('#page-wrap').style.transformOrigin = '';
-
-          document.querySelector('#app').setAttribute('style', this.appOldStyle);
+          const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+          const appEl = document.querySelector<HTMLElement>('#app');
+          if (pageWrap) {
+            pageWrap.style.transition = 'all 0.5s ease 0s';
+            pageWrap.style.transform = '';
+            pageWrap.style.transformStyle = '';
+            pageWrap.style.transformOrigin = '';
+          }
+          if (appEl) {
+            appEl.setAttribute('style', this.appOldStyle);
+          }
           document.body.setAttribute('style', this.bodyOldStyle);
         }
       }
-    };
+    });
 </script>
 
 

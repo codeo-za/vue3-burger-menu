@@ -6,9 +6,10 @@
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
+<script lang="ts">
+    import { defineComponent } from 'vue';
+    import Menu from '../Menu.vue';
+    export default defineComponent({
       name: 'push',
       inheritAttrs: false,
       emits: ['openMenu', 'closeMenu'],
@@ -29,33 +30,33 @@
         },
         push() {
           this.openMenu()
-          let width = this.$attrs.width ? this.$attrs.width + 'px' : '300px';
+          const width = (this.$attrs.width as string | undefined) ? this.$attrs.width + 'px' : '300px';
 
           this.bodyOldStyle = document.body.getAttribute('style') || '';
           document.body.style.overflowX = 'hidden';
 
+          const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+          if (!pageWrap) return;
+
           if (this.$attrs.right) {
-            document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(-${width}, 0px, 0px )`;
+            pageWrap.style.transform = `translate3d(-${width}, 0px, 0px )`;
           } else {
-            document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(${width}, 0px, 0px )`;
+            pageWrap.style.transform = `translate3d(${width}, 0px, 0px )`;
           }
 
-          document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
+          pageWrap.style.transition = 'all 0.5s ease 0s';
         },
         pull() {
           this.closeMenu()
-          document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-          document.querySelector('#page-wrap').style.transform = '';
+          const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+          if (pageWrap) {
+            pageWrap.style.transition = 'all 0.5s ease 0s';
+            pageWrap.style.transform = '';
+          }
           document.body.setAttribute('style', this.bodyOldStyle);
         }
       }
-    };
+    });
 </script>
 
 
