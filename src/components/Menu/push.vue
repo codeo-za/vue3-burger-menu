@@ -21,6 +21,9 @@
       components: {
         Menu: Menu
       },
+      beforeUnmount() {
+        this.pull();
+      },
       methods: {
         openMenu () {
             this.$emit("openMenu")

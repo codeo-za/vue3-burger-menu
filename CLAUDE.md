@@ -46,8 +46,8 @@ Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multip
 │       │   ├── elastic.vue        # WIP (passthrough stub)
 │       │   └── stack.vue          # WIP (passthrough stub)
 │   └── tests/
-│       ├── Menu.spec.ts           # Base component tests (21 tests)
-│       └── Menu-variants.spec.ts  # Variant wrapper tests (46 tests)
+│       ├── Menu.spec.ts           # Base component tests (22 tests)
+│       └── Menu-variants.spec.ts  # Variant wrapper tests (56 tests)
 └── dist/                          # Build output (committed)
     ├── vue-burger-menu.es.js      # ES module bundle
     └── vue-burger-menu.umd.js     # UMD bundle
@@ -69,7 +69,7 @@ Animation Variant (e.g., Slide, Push, ScaleRotate)
 
 **`src/components/Menu.vue`** — Base component containing all shared menu logic: open/close state, overlay, escape key handling, outside-click detection, right-side positioning, burger/cross icons, and event listeners. Manipulates DOM directly via `$refs` and inline styles. Registers a click listener on `document` in `created()` and a keyup listener in `mounted()`.
 
-**`src/components/Menu/*.vue`** — Animation variant wrappers. Each wraps `Menu.vue`, passes props through via `v-bind="$attrs"` with `inheritAttrs: false`, and hooks into `@openMenu`/`@closeMenu` events to apply animation-specific DOM transforms. Some variants (Push, ScaleDown, ScaleRotate, PushRotate, Reveal) use `document.querySelector('#page-wrap')` and `document.querySelector('#app')` to animate the surrounding page.
+**`src/components/Menu/*.vue`** — Animation variant wrappers. Each wraps `Menu.vue`, passes props through via `v-bind="$attrs"` with `inheritAttrs: false`, and hooks into `@openMenu`/`@closeMenu` events to apply animation-specific DOM transforms. Some variants (Push, ScaleDown, ScaleRotate, PushRotate, Reveal, FallDown) use `document.querySelector('#page-wrap')` and `document.querySelector('#app')` to animate the surrounding page. These variants use `beforeUnmount` to reset external DOM styles so that switching menu types while open doesn't leave stale transforms on `#page-wrap`, `#app`, or `body`.
 
 **`src/components/index.ts`** — Barrel file exporting all variants as both named and default exports. This is the library entry point for the Vite build.
 
@@ -112,7 +112,7 @@ Work-in-progress: FallDown, Elastic, Stack
 ### Test Setup
 
 - **Stack:** Vitest 4 + `@vue/test-utils` 2 + jsdom — configured via the `test` block in `vite.config.ts` (reuses the Vue plugin and resolve config automatically)
-- **Files:** `src/tests/Menu.spec.ts` (base component, 21 tests) and `src/tests/Menu-variants.spec.ts` (all 7 working variants, 46 tests)
+- **Files:** `src/tests/Menu.spec.ts` (base component, 22 tests) and `src/tests/Menu-variants.spec.ts` (all 7 working variants, 56 tests)
 - **`attachTo: document.body`** is required when mounting — Menu.vue registers event listeners on `document` in `created()` and `mounted()`, so the component must be in the real DOM for clicks, Escape key, and outside-click tests to work
 - **`flushPromises()`** needed after every interaction — Menu.vue uses `$nextTick` to apply width changes, so assertions against `style.width` fail without flushing
 - **Mock DOM elements for variant transforms** — variants that manipulate `#page-wrap` and `#app` (Push, Reveal, ScaleDown, ScaleRotate, PushRotate) need these elements created in `beforeEach` and removed in `afterEach`

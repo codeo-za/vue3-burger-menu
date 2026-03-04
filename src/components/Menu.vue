@@ -81,7 +81,7 @@
           this.isSideBarOpen = true;
 
           if (!this.noOverlay) {
-            document.body.className += 'bm-overlay';
+            document.body.classList.add('bm-overlay');
           }
           if (this.right) {
             (this.$refs.sideNav as HTMLElement).style.left = 'auto';
@@ -106,10 +106,7 @@
 
           this.$emit('closeMenu');
           this.isSideBarOpen = false;
-          document.body.className = document.body.className.replace(
-            'bm-overlay',
-            ''
-          );
+          document.body.classList.remove('bm-overlay');
           (this.$refs.sideNav as HTMLElement).style.width = '0px';
           return false;
         },
@@ -176,6 +173,7 @@
         document.addEventListener('click', this.documentClick);
       },
       unmounted() {
+        document.body.classList.remove('bm-overlay');
         document.removeEventListener('keyup', this.closeMenuOnEsc);
         document.removeEventListener('click', this.documentClick);
 

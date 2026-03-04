@@ -22,6 +22,9 @@
           appOldStyle: ''
         };
       },
+      beforeUnmount() {
+        this.pull();
+      },
       methods: {
         openMenu () {
             this.$emit("openMenu")

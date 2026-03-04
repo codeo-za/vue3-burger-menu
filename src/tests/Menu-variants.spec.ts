@@ -238,6 +238,34 @@ describe('Variant wrappers', () => {
     })
   })
 
+  describe('cleanup on unmount while open', () => {
+    const domVariants = { Push, Reveal, ScaleDown, ScaleRotate, PushRotate }
+
+    for (const [name, Component] of Object.entries(domVariants)) {
+      it(`${name} resets #page-wrap transform when unmounted while open`, async () => {
+        mountVariant(Component)
+        await openMenu()
+        expect(pageWrap.style.transform).not.toBe('')
+
+        wrapper!.unmount()
+        wrapper = null
+
+        expect(pageWrap.style.transform).toBe('')
+      })
+
+      it(`${name} restores body style when unmounted while open`, async () => {
+        mountVariant(Component)
+        await openMenu()
+        expect(document.body.style.overflowX).toBe('hidden')
+
+        wrapper!.unmount()
+        wrapper = null
+
+        expect(document.body.style.overflowX).not.toBe('hidden')
+      })
+    }
+  })
+
   describe('Bubble animation', () => {
     it('applies borderRadius to .bm-menu on open', async () => {
       mountVariant(Bubble)

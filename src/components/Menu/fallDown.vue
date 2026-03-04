@@ -21,6 +21,16 @@
           bodyOldStyle: ''
         };
       },
+      beforeUnmount() {
+        const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+        if (pageWrap) {
+          pageWrap.style.transform = '';
+          pageWrap.style.transition = '';
+        }
+        document.body.setAttribute('style', this.bodyOldStyle);
+        const bmMenu = this.getBmMenu();
+        if (bmMenu) bmMenu.style.height = '0px';
+      },
       methods : {
           getBmMenu(): HTMLElement | null {
             const menuEl = (this.$refs.sideNav as InstanceType<typeof Menu>).$el as HTMLElement;

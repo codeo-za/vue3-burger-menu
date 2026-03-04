@@ -252,6 +252,18 @@ describe('Menu.vue', () => {
   })
 
   describe('cleanup on unmount', () => {
+    it('removes bm-overlay class from body when unmounted while open', async () => {
+      mountMenu()
+      await wrapper!.find('.bm-burger-button').trigger('click')
+      await flushPromises()
+      expect(document.body.className).toContain('bm-overlay')
+
+      wrapper!.unmount()
+      wrapper = null
+
+      expect(document.body.className).not.toContain('bm-overlay')
+    })
+
     it('removes the correct event listeners from document', async () => {
       const removeSpy = vi.spyOn(document, 'removeEventListener')
       mountMenu()
