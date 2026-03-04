@@ -109,11 +109,12 @@ Check this table to see which animations require these elements:
 | Animation | `#page-wrap` | `#app` |
 | --- | :---: | :---: |
 | `Slide` | | |
-| `Push` | &#x2713; | &#x2713; |
+| `Bubble` | | |
+| `Push` | &#x2713; | |
+| `Reveal` | &#x2713; | |
 | `PushRotate` | &#x2713; | &#x2713; |
 | `ScaleDown` | &#x2713; | &#x2713; |
 | `ScaleRotate` | &#x2713; | &#x2713; |
-| `Reveal` | &#x2713; | |
 
 ### Position
 
@@ -193,7 +194,7 @@ The component has the following helper classes:
 
 ```CSS
 .bm-burger-button {
-  position: fixed;
+  position: absolute;
   width: 36px;
   height: 30px;
   left: 36px;
@@ -219,8 +220,12 @@ The component has the following helper classes:
   background: #bdc3c7;
 }
 .bm-cross-button {
-  height: 24px;
-  width: 24px;
+  height: 36px;
+  width: 36px;
+  padding-left: 16px;
+  padding-top: 8px;
+  margin-top: -8px;
+  margin-right: 8px;
 }
 .bm-menu {
   height: 100%;
@@ -254,6 +259,17 @@ The component has the following helper classes:
 }
 ```
 
+## Development
+
+```
+npm install
+npm run dev          # start dev server
+npm run test         # run tests
+npm run test:watch   # run tests in watch mode
+npm run lint         # lint source files
+npm run build        # build library to dist/
+```
+
 ## Browser Support
 
 Chrome and Firefox have full support, but Safari and IE have strange behavior for some of the menus.
@@ -266,4 +282,3 @@ Chrome and Firefox have full support, but Safari and IE have strange behavior fo
 
 [MIT](https://github.com/mbj36/vue-burger-menu/blob/master/LICENSE)
 
-Like it ? <img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2b50.png?v8" height="20px" /> it
