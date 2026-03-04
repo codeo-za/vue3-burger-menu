@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
-import { Slide, Push, Bubble, Reveal, ScaleDown, ScaleRotate, PushRotate } from '../index'
+import { Slide, Push, Bubble, Reveal, ScaleDown, ScaleRotate, PushRotate } from '../components/index'
 
 // All working variants
 const allVariants = {

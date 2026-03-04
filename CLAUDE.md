@@ -41,9 +41,9 @@ Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multip
 │       │   ├── fallDown.vue       # WIP
 │       │   ├── elastic.vue        # WIP (passthrough stub)
 │       │   └── stack.vue          # WIP (passthrough stub)
-│       └── __tests__/
-│           ├── Menu.spec.js       # Base component tests (19 tests)
-│           └── variants.spec.js   # Variant wrapper tests (46 tests)
+│   └── tests/
+│       ├── Menu.spec.js           # Base component tests (21 tests)
+│       └── Menu-variants.spec.js  # Variant wrapper tests (46 tests)
 └── dist/                          # Build output (committed)
     ├── vue-burger-menu.es.js      # ES module bundle
     └── vue-burger-menu.umd.js     # UMD bundle
@@ -108,13 +108,13 @@ Work-in-progress: FallDown, Elastic, Stack
 ### Test Setup
 
 - **Stack:** Vitest 4 + `@vue/test-utils` 2 + jsdom — configured via the `test` block in `vite.config.js` (reuses the Vue plugin and resolve config automatically)
-- **Files:** `src/components/__tests__/Menu.spec.js` (base component, 19 tests) and `src/components/__tests__/variants.spec.js` (all 7 working variants, 46 tests)
+- **Files:** `src/tests/Menu.spec.js` (base component, 21 tests) and `src/tests/Menu-variants.spec.js` (all 7 working variants, 46 tests)
 - **`attachTo: document.body`** is required when mounting — Menu.vue registers event listeners on `document` in `created()` and `mounted()`, so the component must be in the real DOM for clicks, Escape key, and outside-click tests to work
 - **`flushPromises()`** needed after every interaction — Menu.vue uses `$nextTick` to apply width changes, so assertions against `style.width` fail without flushing
 - **Mock DOM elements for variant transforms** — variants that manipulate `#page-wrap` and `#app` (Push, Reveal, ScaleDown, ScaleRotate, PushRotate) need these elements created in `beforeEach` and removed in `afterEach`
 - **Bubble's `setTimeout`** — uses `vi.useFakeTimers()` + `vi.advanceTimersByTime(300)` to test the two-phase border-radius animation
 - **jsdom trims trailing spaces in CSS values** — e.g. the source sets `translate3d(100px, 0px, -600px ) ` (trailing space) but jsdom normalizes it to `translate3d(100px, 0px, -600px )`. Test expectations must match the trimmed form
-- **Cleanup in `afterEach`:** unmount wrapper, reset `document.body.className` (clears `bm-overlay`), remove mock DOM elements
+- **Cleanup in `afterEach`:** unmount wrapper, reset `document.body.className` (clears `bm-overlay`), reset `document.body.style` (clears leaked `overflow-x`), remove mock DOM elements
 
 ### Key Conventions
 

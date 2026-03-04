@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
-import Menu from '../Menu.vue'
+import Menu from '../components/Menu.vue'
 
 describe('Menu.vue', () => {
   let wrapper
