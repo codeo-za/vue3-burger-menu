@@ -30,7 +30,6 @@
                   set.style.borderTopLeftRadius = '0px 900px';
                   set.style.borderBottomLeftRadius='0px';
                 }
-                set.style.transitionTimingFunction='easy-in';
 
                 setTimeout(function(){
                     set.style.transitionTimingFunction='cubic-bezier(.29, 1.01, 1, -0.68)';
