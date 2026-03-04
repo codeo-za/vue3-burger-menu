@@ -29,7 +29,9 @@
         }
         document.body.setAttribute('style', this.bodyOldStyle);
         const bmMenu = this.getBmMenu();
-        if (bmMenu) bmMenu.style.height = '0px';
+        if (bmMenu) {
+          bmMenu.style.height = '0px';
+        }
       },
       methods : {
           getBmMenu(): HTMLElement | null {
@@ -40,14 +42,18 @@
             this.$emit("openMenu")
             const width = (this.$attrs.width as string | undefined) ? this.$attrs.width + 'px' : '300px';
             const bmMenu = this.getBmMenu();
-            if (!bmMenu) return;
+            if (!bmMenu) {
+              return;
+            }
             bmMenu.style.overflowY = 'hidden';
             this.bodyOldStyle = document.body.getAttribute('style') || '';
             document.body.style.overflowX = 'hidden';
             bmMenu.style.transition='0.5s';
 
           const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
-          if (!pageWrap) return;
+          if (!pageWrap) {
+            return;
+          }
 
           if (this.$attrs.right) {
             pageWrap.style.transform = `translate3d(-${width}, 0px, 0px )`;
@@ -59,7 +65,9 @@
 
             this.$nextTick(() => {
               const menu = this.getBmMenu();
-              if (menu) menu.style.height='100%';
+              if (menu) {
+                menu.style.height='100%';
+              }
               });
 
           },
@@ -72,13 +80,17 @@
             }
             document.body.setAttribute('style', this.bodyOldStyle);
             const bmMenu = this.getBmMenu();
-            if (bmMenu) bmMenu.style.height='0px';
+            if (bmMenu) {
+              bmMenu.style.height='0px';
+            }
 
           }
       },
       mounted () {
         const bmMenu = this.getBmMenu();
-        if (bmMenu) bmMenu.style.height='0px';
+        if (bmMenu) {
+          bmMenu.style.height='0px';
+        }
       }
     });
 </script>
