@@ -35,6 +35,7 @@ describe('Variant wrappers', () => {
       wrapper = null
     }
     document.body.className = ''
+    document.body.removeAttribute('style')
     pageWrap?.remove()
     appDiv?.remove()
   })
@@ -79,19 +80,17 @@ describe('Variant wrappers', () => {
 
   describe('event propagation', () => {
     for (const [name, Component] of Object.entries(allVariants)) {
-      it(`${name} emits openMenu when menu opens`, async () => {
+      it(`${name} emits openMenu exactly once when menu opens`, async () => {
         mountVariant(Component)
         await openMenu()
-        expect(wrapper.emitted('openMenu')).toBeTruthy()
-        expect(wrapper.emitted('openMenu').length).toBeGreaterThanOrEqual(1)
+        expect(wrapper.emitted('openMenu')).toHaveLength(1)
       })
 
-      it(`${name} emits closeMenu when menu closes`, async () => {
+      it(`${name} emits closeMenu exactly once when menu closes`, async () => {
         mountVariant(Component)
         await openMenu()
         await closeMenu()
-        expect(wrapper.emitted('closeMenu')).toBeTruthy()
-        expect(wrapper.emitted('closeMenu').length).toBeGreaterThanOrEqual(1)
+        expect(wrapper.emitted('closeMenu')).toHaveLength(1)
       })
     }
   })
@@ -116,11 +115,12 @@ describe('Variant wrappers', () => {
       expect(document.body.style.overflowX).toBe('hidden')
     })
 
-    it('resets #page-wrap transform on close', async () => {
+    it('resets #page-wrap transform and restores body style on close', async () => {
       mountVariant(Push)
       await openMenu()
       await closeMenu()
       expect(pageWrap.style.transform).toBe('')
+      expect(document.body.style.overflowX).not.toBe('hidden')
     })
 
     it('uses custom width in transform', async () => {
@@ -138,12 +138,13 @@ describe('Variant wrappers', () => {
       expect(pageWrap.style.position).toBe('relative')
     })
 
-    it('resets position and transform on close', async () => {
+    it('resets position, transform, and body style on close', async () => {
       mountVariant(Reveal)
       await openMenu()
       await closeMenu()
       expect(pageWrap.style.transform).toBe('')
       expect(pageWrap.style.position).toBe('')
+      expect(document.body.style.overflowX).not.toBe('hidden')
     })
   })
 
@@ -156,15 +157,20 @@ describe('Variant wrappers', () => {
       expect(pageWrap.style.overflow).toBe('hidden')
       expect(appDiv.style.perspective).toBe('1500px')
       expect(appDiv.style.overflow).toBe('hidden')
+      expect(appDiv.style.height).toBe('100%')
     })
 
-    it('resets all transforms on close', async () => {
+    it('resets all transforms, #app style, and body style on close', async () => {
       mountVariant(ScaleDown)
       await openMenu()
       await closeMenu()
       expect(pageWrap.style.transform).toBe('')
       expect(pageWrap.style.transformStyle).toBe('')
       expect(pageWrap.style.overflow).toBe('auto')
+      expect(appDiv.style.perspective).toBe('')
+      expect(appDiv.style.overflow).toBe('')
+      expect(appDiv.style.height).toBe('')
+      expect(document.body.style.overflowX).not.toBe('hidden')
     })
   })
 
@@ -174,7 +180,10 @@ describe('Variant wrappers', () => {
       await openMenu()
       expect(pageWrap.style.transform).toBe('translate3d(100px, 0px, -600px ) rotateY(-20deg)')
       expect(pageWrap.style.transformStyle).toBe('preserve-3d')
+      expect(pageWrap.style.overflow).toBe('hidden')
       expect(appDiv.style.perspective).toBe('1500px')
+      expect(appDiv.style.overflow).toBe('hidden')
+      expect(appDiv.style.height).toBe('100%')
     })
 
     it('applies opposite rotation when right prop is set', async () => {
@@ -183,12 +192,17 @@ describe('Variant wrappers', () => {
       expect(pageWrap.style.transform).toBe('translate3d(-100px, 0px, -600px ) rotateY(20deg)')
     })
 
-    it('resets transforms on close', async () => {
+    it('resets all transforms, #app style, and body style on close', async () => {
       mountVariant(ScaleRotate)
       await openMenu()
       await closeMenu()
       expect(pageWrap.style.transform).toBe('')
       expect(pageWrap.style.transformStyle).toBe('')
+      expect(pageWrap.style.transformOrigin).toBe('')
+      expect(pageWrap.style.overflow).toBe('auto')
+      expect(appDiv.style.perspective).toBe('')
+      expect(appDiv.style.overflow).toBe('')
+      expect(document.body.style.overflowX).not.toBe('hidden')
     })
   })
 
@@ -200,6 +214,7 @@ describe('Variant wrappers', () => {
       expect(pageWrap.style.transformOrigin).toBe('0% 50% 0px')
       expect(pageWrap.style.transformStyle).toBe('preserve-3d')
       expect(appDiv.style.perspective).toBe('1500px')
+      expect(appDiv.style.overflow).toBe('hidden')
     })
 
     it('applies opposite rotation and origin when right prop is set', async () => {
@@ -209,13 +224,16 @@ describe('Variant wrappers', () => {
       expect(pageWrap.style.transformOrigin).toBe('100% 50% 0px')
     })
 
-    it('resets all transforms on close', async () => {
+    it('resets all transforms, #app style, and body style on close', async () => {
       mountVariant(PushRotate)
       await openMenu()
       await closeMenu()
       expect(pageWrap.style.transform).toBe('')
       expect(pageWrap.style.transformStyle).toBe('')
       expect(pageWrap.style.transformOrigin).toBe('')
+      expect(appDiv.style.perspective).toBe('')
+      expect(appDiv.style.overflow).toBe('')
+      expect(document.body.style.overflowX).not.toBe('hidden')
     })
   })
 
@@ -224,8 +242,7 @@ describe('Variant wrappers', () => {
       mountVariant(Bubble)
       await openMenu()
       const bmMenu = wrapper.find('.bm-menu').element
-      // Initial borderRadius is set, then cleared after 300ms timeout
-      expect(bmMenu.style.borderRadius).toBeTruthy()
+      expect(bmMenu.style.borderRadius).toBe('150% / 70%')
     })
 
     it('clears borderRadius after timeout', async () => {

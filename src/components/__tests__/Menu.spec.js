@@ -106,6 +106,21 @@ describe('Menu.vue', () => {
       const burger = wrapper.find('.bm-burger-button')
       expect(burger.element.style.right).toBe('36px')
       expect(burger.element.style.left).toBe('auto')
+
+      const menu = wrapper.find('.bm-menu')
+      expect(menu.element.style.left).toBe('auto')
+      expect(menu.element.style.right).toBe('0px')
+    })
+
+    it('positions menu on the right when opened with right prop', async () => {
+      mountMenu({ right: true })
+      await wrapper.find('.bm-burger-button').trigger('click')
+      await flushPromises()
+
+      const menu = wrapper.find('.bm-menu')
+      expect(menu.element.style.right).toBe('0px')
+      expect(menu.element.style.left).toBe('auto')
+      expect(menu.element.style.width).toBe('300px')
     })
   })
 
@@ -184,6 +199,17 @@ describe('Menu.vue', () => {
 
       expect(document.body.className).toContain('bm-overlay')
     })
+
+    it('removes bm-overlay class from body when menu closes', async () => {
+      mountMenu()
+      await wrapper.find('.bm-burger-button').trigger('click')
+      await flushPromises()
+      expect(document.body.className).toContain('bm-overlay')
+
+      await wrapper.find('.bm-cross-button').trigger('click')
+      await flushPromises()
+      expect(document.body.className).not.toContain('bm-overlay')
+    })
   })
 
   describe('burgerIcon prop', () => {
@@ -226,14 +252,15 @@ describe('Menu.vue', () => {
   })
 
   describe('cleanup on unmount', () => {
-    it('removes event listeners from document', async () => {
+    it('removes the correct event listeners from document', async () => {
       const removeSpy = vi.spyOn(document, 'removeEventListener')
       mountMenu()
+      const { closeMenuOnEsc, documentClick } = wrapper.vm
       wrapper.unmount()
 
-      const removedEvents = removeSpy.mock.calls.map(call => call[0])
-      expect(removedEvents).toContain('keyup')
-      expect(removedEvents).toContain('click')
+      const removeCalls = removeSpy.mock.calls.map(call => [call[0], call[1]])
+      expect(removeCalls).toContainEqual(['keyup', closeMenuOnEsc])
+      expect(removeCalls).toContainEqual(['click', documentClick])
 
       removeSpy.mockRestore()
       wrapper = null // prevent double-unmount in afterEach
