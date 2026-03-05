@@ -39,7 +39,9 @@
           document.body.style.overflowX = 'hidden';
 
           const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
-          if (!pageWrap) return;
+          if (!pageWrap) {
+            return;
+          }
 
           if (this.$attrs.right) {
             pageWrap.style.transform = `translate3d(-${width}, 0px, 0px )`;

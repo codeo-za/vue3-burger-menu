@@ -41,7 +41,9 @@
 
           const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
           const appEl = document.querySelector<HTMLElement>('#app');
-          if (!pageWrap || !appEl) return;
+          if (!pageWrap || !appEl) {
+            return;
+          }
 
           if (this.$attrs.right) {
             pageWrap.style.transform = `translate3d(-${width}, 0px, 0px ) rotateY(15deg)`;

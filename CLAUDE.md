@@ -46,7 +46,7 @@ Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multip
 │       │   ├── elastic.vue        # WIP (passthrough stub)
 │       │   └── stack.vue          # WIP (passthrough stub)
 │   └── tests/
-│       ├── Menu.spec.ts           # Base component tests (22 tests)
+│       ├── Menu.spec.ts           # Base component tests (23 tests)
 │       └── Menu-variants.spec.ts  # Variant wrapper tests (56 tests)
 └── dist/                          # Build output (committed)
     ├── vue-burger-menu.es.js      # ES module bundle
@@ -112,7 +112,7 @@ Work-in-progress: FallDown, Elastic, Stack
 ### Test Setup
 
 - **Stack:** Vitest 4 + `@vue/test-utils` 2 + jsdom — configured via the `test` block in `vite.config.ts` (reuses the Vue plugin and resolve config automatically)
-- **Files:** `src/tests/Menu.spec.ts` (base component, 22 tests) and `src/tests/Menu-variants.spec.ts` (all 7 working variants, 56 tests)
+- **Files:** `src/tests/Menu.spec.ts` (base component, 23 tests) and `src/tests/Menu-variants.spec.ts` (all 7 working variants, 56 tests)
 - **`attachTo: document.body`** is required when mounting — Menu.vue registers event listeners on `document` in `created()` and `mounted()`, so the component must be in the real DOM for clicks, Escape key, and outside-click tests to work
 - **`flushPromises()`** needed after every interaction — Menu.vue uses `$nextTick` to apply width changes, so assertions against `style.width` fail without flushing
 - **Mock DOM elements for variant transforms** — variants that manipulate `#page-wrap` and `#app` (Push, Reveal, ScaleDown, ScaleRotate, PushRotate) need these elements created in `beforeEach` and removed in `afterEach`
