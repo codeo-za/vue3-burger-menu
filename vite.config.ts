@@ -16,7 +16,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/components/index.ts'),
       name: 'VueBurgerMenu',
       formats: ['es', 'umd'],
-      fileName: (format) => `vue-burger-menu.${format}.js`
+      fileName: (format) => `vue3-burger-menu.${format}.js`
     },
     rollupOptions: {
       external: ['vue'],

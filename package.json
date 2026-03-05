@@ -1,6 +1,6 @@
 {
-  "name": "vue-burger-menu",
-  "version": "3.0.0",
+  "name": "vue3-burger-menu",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "dev": "vite",
@@ -12,15 +12,15 @@
     "test:watch": "vitest"
   },
   "files": [
-    "dist/vue-burger-menu.es.js",
-    "dist/vue-burger-menu.umd.js"
+    "dist/vue3-burger-menu.es.js",
+    "dist/vue3-burger-menu.umd.js"
   ],
-  "main": "./dist/vue-burger-menu.umd.js",
-  "module": "./dist/vue-burger-menu.es.js",
+  "main": "./dist/vue3-burger-menu.umd.js",
+  "module": "./dist/vue3-burger-menu.es.js",
   "exports": {
     ".": {
-      "import": "./dist/vue-burger-menu.es.js",
-      "require": "./dist/vue-burger-menu.umd.js"
+      "import": "./dist/vue3-burger-menu.es.js",
+      "require": "./dist/vue3-burger-menu.umd.js"
     }
   },
   "dependencies": {
@@ -74,7 +74,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codeo-za/vue-burger-menu.git"
+    "url": "git+https://github.com/codeo-za/vue3-burger-menu.git"
   },
   "devDependencies": {
     "@types/node": "^22.19.13",

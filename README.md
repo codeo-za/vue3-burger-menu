@@ -1,10 +1,10 @@
-# vue-burger-menu [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+# vue3-burger-menu [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 [![npm](https://img.shields.io/npm/v/vue-burger-menu.svg?maxAge=3600)](https://www.npmjs.com/package/vue-burger-menu)
 
 An off-canvas sidebar Vue 3 component with a collection of effects and styles using CSS transitions and SVG path animations.
 
-> **Note:** This is the Vue 3 version. For Vue 2, use v2.x.
+> **Note:** This is the Vue 3 version.
 
 ## Demo & examples
 
@@ -22,11 +22,11 @@ Then open [`localhost:5173`](http://localhost:5173) in a browser
 ## Installation
 
 ```
-npm install vue-burger-menu --save
+npm install vue3-burger-menu --save
 ```
 
 ```
-yarn add vue-burger-menu
+yarn add vue3-burger-menu
 ```
 
 ### Requirements
@@ -39,7 +39,7 @@ yarn add vue-burger-menu
 Items should be passed as child elements of the components
 
 ```javascript
-import { Slide } from 'vue-burger-menu'  // import the CSS transitions you wish to use, in this case we are using `Slide`
+import { Slide } from 'vue3-burger-menu'  // import the CSS transitions you wish to use, in this case we are using `Slide`
 
 export default {
     components: {
