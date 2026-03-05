@@ -9,7 +9,7 @@ Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multip
 ## Commands
 
 - **Dev server:** `npm run dev` (Vite, localhost:5173)
-- **Build library:** `npm run build` (type-checks with `vue-tsc` then outputs ES + UMD to `dist/`)
+- **Build library:** `npm run build` (type-checks with `vue-tsc`, builds ES + UMD bundles to `dist/`, then generates `.d.ts` declarations to `dist/components/`)
 - **Preview built app:** `npm run preview`
 - **Typecheck:** `npm run typecheck` (`vue-tsc --noEmit`)
 - **Lint:** `npm run lint` (ESLint with `plugin:vue/vue3-essential` + `eslint:recommended`)
@@ -22,6 +22,7 @@ Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multip
 ├── index.html                     # Demo app HTML shell (mounts into <div id="app">)
 ├── vite.config.ts                 # Vite config: library build, Vue plugin, test config
 ├── tsconfig.json                  # TypeScript config (extends @vue/tsconfig)
+├── tsconfig.build.json             # TypeScript config for declaration output (extends tsconfig.json)
 ├── tsconfig.node.json             # TypeScript config for vite.config.ts
 ├── package.json                   # npm package config (publishes dist/ only)
 ├── .eslintrc.cjs                  # ESLint config (vue3-essential + eslint:recommended + TS parser)
@@ -50,7 +51,9 @@ Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multip
 │       └── Menu-variants.spec.ts  # Variant wrapper tests (56 tests)
 └── dist/                          # Build output (committed)
     ├── vue3-burger-menu.es.js      # ES module bundle
-    └── vue3-burger-menu.umd.js     # UMD bundle
+    ├── vue3-burger-menu.umd.js     # UMD bundle
+    └── components/                 # TypeScript declarations (.d.ts files)
+        └── index.d.ts             # Main declaration entry point
 ```
 
 ## Architecture
@@ -100,7 +103,8 @@ Work-in-progress: FallDown, Elastic, Stack
 - CSS is injected into the DOM at runtime via `vite-plugin-css-injected-by-js` (matches the old Vue CLI `css.extract: false` behavior — consumers just import JS, no separate CSS import needed)
 - `resolve.extensions` includes `.vue` — Vite does not resolve `.vue` extensions by default (unlike webpack/Vue CLI), so this is required for the extensionless imports throughout the codebase
 - Rollup output uses `exports: 'named'` to avoid UMD consumer issues with mixed named/default exports
-- Published files: `dist/vue3-burger-menu.es.js` (ES module) and `dist/vue3-burger-menu.umd.js` (UMD)
+- **`tsconfig.build.json`**: Extends `tsconfig.json` with `declaration: true`, `emitDeclarationOnly: true`, `outDir: "dist"`, `rootDir: "src"`. Run by the build script after Vite to generate `.d.ts` files into `dist/components/`
+- Published files: `dist/vue3-burger-menu.es.js` (ES module), `dist/vue3-burger-menu.umd.js` (UMD), and `dist/components/*.d.ts` (TypeScript declarations). The `types` field and `exports` types condition in `package.json` point to `dist/components/index.d.ts`
 - `public/favicon.ico` gets copied into `dist/` by Vite on build — this is harmless and excluded by the `files` array in `package.json`
 
 ### Dependencies
