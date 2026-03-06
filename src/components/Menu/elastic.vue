@@ -1,28 +1,21 @@
 <template>
     <div>
-        <Menu v-bind="$attrs" @openMenu="openMenu" @closeMenu="closeMenu">
+        <Menu v-bind="$attrs" @openMenu="emit('openMenu')" @closeMenu="emit('closeMenu')">
             <slot></slot>
         </Menu>
     </div>
 </template>
 
-<script lang="ts">
-    import { defineComponent } from 'vue';
-    import Menu from '../Menu.vue';
-    export default defineComponent({
-      name: 'elastic',
-      inheritAttrs: false,
-      emits: ['openMenu', 'closeMenu'],
-      components: {
-        Menu: Menu
-      },
-      methods : {
-          openMenu () {
-              this.$emit("openMenu")
-          },
-          closeMenu () {
-              this.$emit("closeMenu")
-          }
-      }
-    });
+<script setup lang="ts">
+import Menu from '../Menu.vue';
+
+defineOptions({
+  name: 'elastic',
+  inheritAttrs: false
+});
+
+const emit = defineEmits<{
+  openMenu: [];
+  closeMenu: [];
+}>();
 </script>

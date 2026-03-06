@@ -1,6 +1,6 @@
 (function(){"use strict";try{if(typeof document<"u"){var t=document.createElement("style");t.appendChild(document.createTextNode("html{height:100%}.bm-burger-button{position:absolute;width:36px;height:30px;left:36px;top:36px;cursor:pointer}.bm-burger-button.hidden{display:none}.bm-burger-bars{background-color:#373a47}.line-style{position:absolute;height:20%;left:0;right:0}.cross-style{position:absolute;top:12px;right:2px;cursor:pointer}.bm-cross{background:#bdc3c7}.bm-cross-button{height:36px;width:36px;padding-left:16px;padding-top:8px;margin-top:-8px;margin-right:8px}.bm-cross-button.hidden{display:none}.bm-menu{height:100%;width:0;position:fixed;z-index:1000;top:0;left:0;background-color:#3f3f41;overflow-x:hidden;padding-top:60px;transition:.5s}.bm-overlay{background:#0000004d}.bm-item-list{color:#b8b7ad;margin-left:10%;font-size:20px}.bm-item-list>*{display:flex;text-decoration:none;padding:.7em}.bm-item-list>*>span{margin-left:10px;font-weight:700;color:#fff}")),document.head.appendChild(t)}}catch(e){console.error("vite-plugin-css-injected-by-js",e)}})();
-import { defineComponent as u, openBlock as l, createElementBlock as i, createElementVNode as M, renderSlot as a, normalizeClass as b, Fragment as g, renderList as v, normalizeStyle as O, resolveComponent as h, createVNode as m, mergeProps as y, withCtx as f } from "vue";
-const S = u({
+import { defineComponent as m, openBlock as c, createElementBlock as d, createElementVNode as M, renderSlot as f, normalizeClass as S, Fragment as O, renderList as E, normalizeStyle as A, createVNode as h, mergeProps as b, withCtx as v, useAttrs as $, useTemplateRef as B, ref as g, onBeforeUnmount as _, onMounted as k, nextTick as q } from "vue";
+const C = m({
   name: "menubar",
   emits: ["openMenu", "closeMenu"],
   data() {
@@ -47,50 +47,50 @@ const S = u({
     }
   },
   methods: {
-    openMenu(e) {
-      return e && (e.stopPropagation(), e.preventDefault()), this.isSideBarOpen || (this.$emit("openMenu"), this.isSideBarOpen = !0, this.noOverlay || document.body.classList.add("bm-overlay"), this.right && (this.$refs.sideNav.style.left = "auto", this.$refs.sideNav.style.right = "0px"), this.$nextTick(() => {
+    openMenu(s) {
+      return s && (s.stopPropagation(), s.preventDefault()), this.isSideBarOpen || (this.$emit("openMenu"), this.isSideBarOpen = !0, this.noOverlay || document.body.classList.add("bm-overlay"), this.right && (this.$refs.sideNav.style.left = "auto", this.$refs.sideNav.style.right = "0px"), this.$nextTick(() => {
         this.$refs.sideNav.style.width = this.width ? this.width + "px" : "300px";
       })), !1;
     },
-    closeMenu(e) {
-      return e && (e.stopPropagation(), e.preventDefault()), this.isSideBarOpen && (this.$emit("closeMenu"), this.isSideBarOpen = !1, document.body.classList.remove("bm-overlay"), this.$refs.sideNav.style.width = "0px"), !1;
+    closeMenu(s) {
+      return s && (s.stopPropagation(), s.preventDefault()), this.isSideBarOpen && (this.$emit("closeMenu"), this.isSideBarOpen = !1, document.body.classList.remove("bm-overlay"), this.$refs.sideNav.style.width = "0px"), !1;
     },
-    closeMenuOnEsc(e) {
-      (e.key === "Escape" || e.keyCode === 27) && this.closeMenu();
+    closeMenuOnEsc(s) {
+      (s.key === "Escape" || s.keyCode === 27) && this.closeMenu();
     },
-    documentClick(e) {
-      const t = this.$refs.bmBurgerButton, s = e.target;
-      t && s && t !== s && !t.contains(s) && s.className !== "bm-menu" && this.isSideBarOpen && !this.disableOutsideClick && this.closeMenu();
+    documentClick(s) {
+      const n = this.$refs.bmBurgerButton, o = s.target;
+      n && o && n !== o && !n.contains(o) && o.className !== "bm-menu" && this.isSideBarOpen && !this.disableOutsideClick && this.closeMenu();
     },
     applyPosition() {
-      const e = this.$refs.bmBurgerButton, t = this.$refs.sideNav, s = this.$refs.bmCrossButton;
-      !e || !t || !s || (this.right ? (t.style.left = "auto", t.style.right = "0px", e.style.left = "auto", e.style.right = "36px", s.style.right = "250px") : e.hasAttribute("style") && (e.removeAttribute("style"), t.style.right = "auto", s.style.right = "0px"));
+      const s = this.$refs.bmBurgerButton, n = this.$refs.sideNav, o = this.$refs.bmCrossButton;
+      !s || !n || !o || (this.right ? (n.style.left = "auto", n.style.right = "0px", s.style.left = "auto", s.style.right = "36px", o.style.right = "250px") : s.hasAttribute("style") && (s.removeAttribute("style"), n.style.right = "auto", o.style.right = "0px"));
     }
   },
   mounted() {
     this.disableEsc || document.addEventListener("keyup", this.closeMenuOnEsc);
-    const e = this.$refs.bmBurgerButton;
-    e.addEventListener("touchstart", this.openMenu), e.addEventListener("click", this.openMenu);
-    const t = this.$refs.bmCrossButton;
-    t.addEventListener("click", this.closeMenu), t.addEventListener("touchstart", this.closeMenu), this.applyPosition();
+    const s = this.$refs.bmBurgerButton;
+    s.addEventListener("touchstart", this.openMenu), s.addEventListener("click", this.openMenu);
+    const n = this.$refs.bmCrossButton;
+    n.addEventListener("click", this.closeMenu), n.addEventListener("touchstart", this.closeMenu), this.applyPosition();
   },
   created() {
     document.addEventListener("click", this.documentClick);
   },
   unmounted() {
     document.body.classList.remove("bm-overlay"), document.removeEventListener("keyup", this.closeMenuOnEsc), document.removeEventListener("click", this.documentClick);
-    const e = this.$refs.bmBurgerButton;
-    e && (e.removeEventListener("touchstart", this.openMenu), e.removeEventListener("click", this.openMenu));
-    const t = this.$refs.bmCrossButton;
-    t && (t.removeEventListener("click", this.closeMenu), t.removeEventListener("touchstart", this.closeMenu));
+    const s = this.$refs.bmBurgerButton;
+    s && (s.removeEventListener("touchstart", this.openMenu), s.removeEventListener("click", this.openMenu));
+    const n = this.$refs.bmCrossButton;
+    n && (n.removeEventListener("click", this.closeMenu), n.removeEventListener("touchstart", this.closeMenu));
   },
   watch: {
     isOpen: {
       deep: !0,
       immediate: !0,
-      handler(e, t) {
+      handler(s, n) {
         this.$nextTick(() => {
-          !t && e && this.openMenu(), t && !e && this.closeMenu();
+          !n && s && this.openMenu(), n && !s && this.closeMenu();
         });
       }
     },
@@ -102,25 +102,25 @@ const S = u({
       }
     }
   }
-}), p = (e, t) => {
-  const s = e.__vccOpts || e;
-  for (const [o, r] of t)
-    s[o] = r;
-  return s;
-}, w = {
+}), L = (s, n) => {
+  const o = s.__vccOpts || s;
+  for (const [i, r] of n)
+    o[i] = r;
+  return o;
+}, R = {
   ref: "sideNav",
   class: "bm-menu"
-}, _ = { class: "bm-item-list" };
-function B(e, t, s, o, r, c) {
-  return l(), i("div", null, [
-    M("div", w, [
-      M("nav", _, [
-        a(e.$slots, "default")
+}, N = { class: "bm-item-list" };
+function W(s, n, o, i, r, u) {
+  return c(), d("div", null, [
+    M("div", R, [
+      M("nav", N, [
+        f(s.$slots, "default")
       ]),
       M("span", {
         ref: "bmCrossButton",
-        class: b(["bm-cross-button cross-style", { hidden: !e.crossIcon }])
-      }, [...t[1] || (t[1] = [
+        class: S(["bm-cross-button cross-style", { hidden: !s.crossIcon }])
+      }, [...n[1] || (n[1] = [
         M("span", {
           class: "bm-cross",
           style: { position: "absolute", width: "3px", height: "14px", transform: "rotate(-45deg)" }
@@ -133,479 +133,347 @@ function B(e, t, s, o, r, c) {
     ], 512),
     M("div", {
       ref: "bmBurgerButton",
-      class: b(["bm-burger-button", { hidden: !e.burgerIcon }]),
-      onClick: t[0] || (t[0] = (...n) => e.openMenu && e.openMenu(...n))
+      class: S(["bm-burger-button", { hidden: !s.burgerIcon }]),
+      onClick: n[0] || (n[0] = (...p) => s.openMenu && s.openMenu(...p))
     }, [
-      (l(), i(g, null, v(3, (n, $) => M("span", {
+      (c(), d(O, null, E(3, (p, l) => M("span", {
         class: "bm-burger-bars line-style",
-        style: O({ top: 20 * ($ * 2) + "%" }),
-        key: $
+        style: A({ top: 20 * (l * 2) + "%" }),
+        key: l
       }, null, 4)), 64))
     ], 2)
   ]);
 }
-const d = /* @__PURE__ */ p(S, [["render", B]]), x = u({
+const y = /* @__PURE__ */ L(C, [["render", W]]), P = /* @__PURE__ */ m({
   name: "slide",
   inheritAttrs: !1,
+  __name: "slide",
   emits: ["openMenu", "closeMenu"],
-  components: {
-    Menu: d
-  },
-  methods: {
-    openMenu() {
-      this.$emit("openMenu");
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-    }
+  setup(s, { emit: n }) {
+    const o = n;
+    return (i, r) => (c(), d("div", null, [
+      h(y, b(i.$attrs, {
+        onOpenMenu: r[0] || (r[0] = (u) => o("openMenu")),
+        onCloseMenu: r[1] || (r[1] = (u) => o("closeMenu"))
+      }), {
+        default: v(() => [
+          f(i.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function C(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y(e.$attrs, {
-      onOpenMenu: e.openMenu,
-      onCloseMenu: e.closeMenu
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const E = /* @__PURE__ */ p(x, [["render", C]]), A = u({
+}), T = /* @__PURE__ */ m({
   name: "bubble",
   inheritAttrs: !1,
+  __name: "bubble",
   emits: ["openMenu", "closeMenu"],
-  components: {
-    Menu: d
-  },
-  methods: {
-    openMenu() {
-      const t = this.$refs.sideNav.$el.querySelector(".bm-menu");
-      t && (t.style.borderRadius = "150% / 70%", this.$attrs.right ? (t.style.borderTopRightRadius = "0px 900px", t.style.borderBottomRightRadius = "0px") : (t.style.borderTopLeftRadius = "0px 900px", t.style.borderBottomLeftRadius = "0px"), setTimeout(function() {
-        t.style.transitionTimingFunction = "cubic-bezier(.29, 1.01, 1, -0.68)", t.style.borderRadius = "0px";
-      }, 300)), this.$emit("openMenu");
-    },
-    closeMenu() {
-      const t = this.$refs.sideNav.$el.querySelector(".bm-menu");
-      t && (t.style.transitionTimingFunction = ""), this.$emit("closeMenu");
+  setup(s, { emit: n }) {
+    const o = n, i = $(), r = B("sideNav");
+    function u() {
+      const e = r.value?.$el?.querySelector(".bm-menu");
+      e && (e.style.borderRadius = "150% / 70%", i.right ? (e.style.borderTopRightRadius = "0px 900px", e.style.borderBottomRightRadius = "0px") : (e.style.borderTopLeftRadius = "0px 900px", e.style.borderBottomLeftRadius = "0px"), setTimeout(function() {
+        e.style.transitionTimingFunction = "cubic-bezier(.29, 1.01, 1, -0.68)", e.style.borderRadius = "0px";
+      }, 300)), o("openMenu");
     }
+    function p() {
+      const e = r.value?.$el?.querySelector(".bm-menu");
+      e && (e.style.transitionTimingFunction = ""), o("closeMenu");
+    }
+    return (l, e) => (c(), d("div", null, [
+      h(y, b({
+        ref_key: "sideNav",
+        ref: r
+      }, l.$attrs, {
+        onOpenMenu: u,
+        onCloseMenu: p
+      }), {
+        default: v(() => [
+          f(l.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function q(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y({ ref: "sideNav" }, e.$attrs, {
-      onOpenMenu: e.openMenu,
-      onCloseMenu: e.closeMenu
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const k = /* @__PURE__ */ p(A, [["render", q]]), L = u({
+}), D = /* @__PURE__ */ m({
   name: "reveal",
   inheritAttrs: !1,
+  __name: "reveal",
   emits: ["openMenu", "closeMenu"],
-  data() {
-    return {
-      bodyOldStyle: ""
-    };
-  },
-  components: {
-    Menu: d
-  },
-  beforeUnmount() {
-    this.pull();
-  },
-  methods: {
-    openMenu() {
-      this.$emit("openMenu");
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-    },
-    push() {
-      this.openMenu();
-      const e = this.$attrs.width ? this.$attrs.width + "px" : "300px";
-      this.bodyOldStyle = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
-      const t = document.querySelector("#page-wrap");
-      t && (this.$attrs.right ? t.style.transform = `translate3d(-${e}, 0px, 0px )` : t.style.transform = `translate3d(${e}, 0px, 0px )`, t.style.position = "relative", t.style.transition = "all 0.5s ease 0s");
-    },
-    pull() {
-      this.closeMenu();
+  setup(s, { emit: n }) {
+    const o = n, i = $(), r = g("");
+    function u() {
+      o("openMenu");
+      const l = i.width ? i.width + "px" : "300px";
+      r.value = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
       const e = document.querySelector("#page-wrap");
-      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = "", e.style.position = ""), document.body.setAttribute("style", this.bodyOldStyle);
+      e && (i.right ? e.style.transform = `translate3d(-${l}, 0px, 0px )` : e.style.transform = `translate3d(${l}, 0px, 0px )`, e.style.position = "relative", e.style.transition = "all 0.5s ease 0s");
     }
+    function p() {
+      o("closeMenu");
+      const l = document.querySelector("#page-wrap");
+      l && (l.style.transition = "all 0.5s ease 0s", l.style.transform = "", l.style.position = ""), document.body.setAttribute("style", r.value);
+    }
+    return _(() => {
+      p();
+    }), (l, e) => (c(), d("div", null, [
+      h(y, b(l.$attrs, {
+        onOpenMenu: u,
+        onCloseMenu: p
+      }), {
+        default: v(() => [
+          f(l.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function N(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y(e.$attrs, {
-      onOpenMenu: e.push,
-      onCloseMenu: e.pull
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const W = /* @__PURE__ */ p(L, [["render", N]]), R = u({
+}), X = /* @__PURE__ */ m({
   name: "push",
   inheritAttrs: !1,
+  __name: "push",
   emits: ["openMenu", "closeMenu"],
-  data() {
-    return {
-      bodyOldStyle: ""
-    };
-  },
-  components: {
-    Menu: d
-  },
-  beforeUnmount() {
-    this.pull();
-  },
-  methods: {
-    openMenu() {
-      this.$emit("openMenu");
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-    },
-    push() {
-      this.openMenu();
-      const e = this.$attrs.width ? this.$attrs.width + "px" : "300px";
-      this.bodyOldStyle = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
-      const t = document.querySelector("#page-wrap");
-      t && (this.$attrs.right ? t.style.transform = `translate3d(-${e}, 0px, 0px )` : t.style.transform = `translate3d(${e}, 0px, 0px )`, t.style.transition = "all 0.5s ease 0s");
-    },
-    pull() {
-      this.closeMenu();
+  setup(s, { emit: n }) {
+    const o = n, i = $(), r = g("");
+    function u() {
+      o("openMenu");
+      const l = i.width ? i.width + "px" : "300px";
+      r.value = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
       const e = document.querySelector("#page-wrap");
-      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = ""), document.body.setAttribute("style", this.bodyOldStyle);
+      e && (i.right ? e.style.transform = `translate3d(-${l}, 0px, 0px )` : e.style.transform = `translate3d(${l}, 0px, 0px )`, e.style.transition = "all 0.5s ease 0s");
     }
+    function p() {
+      o("closeMenu");
+      const l = document.querySelector("#page-wrap");
+      l && (l.style.transition = "all 0.5s ease 0s", l.style.transform = ""), document.body.setAttribute("style", r.value);
+    }
+    return _(() => {
+      p();
+    }), (l, e) => (c(), d("div", null, [
+      h(y, b(l.$attrs, {
+        onOpenMenu: u,
+        onCloseMenu: p
+      }), {
+        default: v(() => [
+          f(l.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function T(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y(e.$attrs, {
-      onOpenMenu: e.push,
-      onCloseMenu: e.pull
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const P = /* @__PURE__ */ p(R, [["render", T]]), U = u({
+}), F = /* @__PURE__ */ m({
   name: "elastic",
   inheritAttrs: !1,
+  __name: "elastic",
   emits: ["openMenu", "closeMenu"],
-  components: {
-    Menu: d
-  },
-  methods: {
-    openMenu() {
-      this.$emit("openMenu");
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-    }
+  setup(s, { emit: n }) {
+    const o = n;
+    return (i, r) => (c(), d("div", null, [
+      h(y, b(i.$attrs, {
+        onOpenMenu: r[0] || (r[0] = (u) => o("openMenu")),
+        onCloseMenu: r[1] || (r[1] = (u) => o("closeMenu"))
+      }), {
+        default: v(() => [
+          f(i.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function X(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y(e.$attrs, {
-      onOpenMenu: e.openMenu,
-      onCloseMenu: e.closeMenu
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const Y = /* @__PURE__ */ p(U, [["render", X]]), D = u({
+}), Y = /* @__PURE__ */ m({
   name: "falldown",
   inheritAttrs: !1,
+  __name: "fallDown",
   emits: ["openMenu", "closeMenu"],
-  components: {
-    Menu: d
-  },
-  data() {
-    return {
-      bodyOldStyle: ""
-    };
-  },
-  beforeUnmount() {
-    const e = document.querySelector("#page-wrap");
-    e && (e.style.transform = "", e.style.transition = ""), document.body.setAttribute("style", this.bodyOldStyle);
-    const t = this.getBmMenu();
-    t && (t.style.height = "0px");
-  },
-  methods: {
-    getBmMenu() {
-      return this.$refs.sideNav.$el.querySelector(".bm-menu");
-    },
-    openMenu() {
-      this.$emit("openMenu");
-      const e = this.$attrs.width ? this.$attrs.width + "px" : "300px", t = this.getBmMenu();
-      if (!t)
-        return;
-      t.style.overflowY = "hidden", this.bodyOldStyle = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden", t.style.transition = "0.5s";
-      const s = document.querySelector("#page-wrap");
-      s && (this.$attrs.right ? s.style.transform = `translate3d(-${e}, 0px, 0px )` : s.style.transform = `translate3d(${e}, 0px, 0px )`, s.style.transition = "all 0.5s ease 0s", this.$nextTick(() => {
-        const o = this.getBmMenu();
-        o && (o.style.height = "100%");
-      }));
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-      const e = document.querySelector("#page-wrap");
-      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = ""), document.body.setAttribute("style", this.bodyOldStyle);
-      const t = this.getBmMenu();
-      t && (t.style.height = "0px");
+  setup(s, { emit: n }) {
+    const o = n, i = $(), r = B("sideNav"), u = g("");
+    function p() {
+      return r.value?.$el?.querySelector(".bm-menu") ?? null;
     }
-  },
-  mounted() {
-    const e = this.getBmMenu();
-    e && (e.style.height = "0px");
+    function l() {
+      o("openMenu");
+      const t = i.width ? i.width + "px" : "300px", a = p();
+      if (!a)
+        return;
+      a.style.overflowY = "hidden", u.value = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden", a.style.transition = "0.5s";
+      const w = document.querySelector("#page-wrap");
+      w && (i.right ? w.style.transform = `translate3d(-${t}, 0px, 0px )` : w.style.transform = `translate3d(${t}, 0px, 0px )`, w.style.transition = "all 0.5s ease 0s", q(() => {
+        const x = p();
+        x && (x.style.height = "100%");
+      }));
+    }
+    function e() {
+      o("closeMenu");
+      const t = document.querySelector("#page-wrap");
+      t && (t.style.transition = "all 0.5s ease 0s", t.style.transform = ""), document.body.setAttribute("style", u.value);
+      const a = p();
+      a && (a.style.height = "0px");
+    }
+    return k(() => {
+      const t = p();
+      t && (t.style.height = "0px");
+    }), _(() => {
+      const t = document.querySelector("#page-wrap");
+      t && (t.style.transform = "", t.style.transition = ""), document.body.setAttribute("style", u.value);
+      const a = p();
+      a && (a.style.height = "0px");
+    }), (t, a) => (c(), d("div", null, [
+      h(y, b({
+        ref_key: "sideNav",
+        ref: r
+      }, t.$attrs, {
+        onOpenMenu: l,
+        onCloseMenu: e
+      }), {
+        default: v(() => [
+          f(t.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function F(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y({ ref: "sideNav" }, e.$attrs, {
-      onOpenMenu: e.openMenu,
-      onCloseMenu: e.closeMenu
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const I = /* @__PURE__ */ p(D, [["render", F]]), z = u({
+}), I = /* @__PURE__ */ m({
   name: "pushrotate",
   inheritAttrs: !1,
+  __name: "pushRotate",
   emits: ["openMenu", "closeMenu"],
-  components: {
-    Menu: d
-  },
-  data() {
-    return {
-      bodyOldStyle: "",
-      appOldStyle: ""
-    };
-  },
-  beforeUnmount() {
-    this.pull();
-  },
-  methods: {
-    openMenu() {
-      this.$emit("openMenu");
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-    },
-    push() {
-      this.openMenu();
-      const e = this.$attrs.width ? this.$attrs.width + "px" : "300px";
-      this.bodyOldStyle = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
-      const t = document.querySelector("#page-wrap"), s = document.querySelector("#app");
-      !t || !s || (this.$attrs.right ? (t.style.transform = `translate3d(-${e}, 0px, 0px ) rotateY(15deg)`, t.style.transformOrigin = "100% 50% 0px") : (t.style.transform = `translate3d(${e}, 0px, 0px ) rotateY(-15deg)`, t.style.transformOrigin = "0% 50% 0px"), t.style.transformStyle = "preserve-3d", t.style.transition = "all 0.5s ease 0s", this.appOldStyle = s.getAttribute("style") || "", s.style.perspective = "1500px", s.style.overflow = "hidden");
-    },
-    pull() {
-      this.closeMenu();
-      const e = document.querySelector("#page-wrap"), t = document.querySelector("#app");
-      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = "", e.style.transformStyle = "", e.style.transformOrigin = ""), t && t.setAttribute("style", this.appOldStyle), document.body.setAttribute("style", this.bodyOldStyle);
+  setup(s, { emit: n }) {
+    const o = n, i = $(), r = g(""), u = g("");
+    function p() {
+      o("openMenu");
+      const e = i.width ? i.width + "px" : "300px";
+      r.value = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
+      const t = document.querySelector("#page-wrap"), a = document.querySelector("#app");
+      !t || !a || (i.right ? (t.style.transform = `translate3d(-${e}, 0px, 0px ) rotateY(15deg)`, t.style.transformOrigin = "100% 50% 0px") : (t.style.transform = `translate3d(${e}, 0px, 0px ) rotateY(-15deg)`, t.style.transformOrigin = "0% 50% 0px"), t.style.transformStyle = "preserve-3d", t.style.transition = "all 0.5s ease 0s", u.value = a.getAttribute("style") || "", a.style.perspective = "1500px", a.style.overflow = "hidden");
     }
+    function l() {
+      o("closeMenu");
+      const e = document.querySelector("#page-wrap"), t = document.querySelector("#app");
+      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = "", e.style.transformStyle = "", e.style.transformOrigin = ""), t && t.setAttribute("style", u.value), document.body.setAttribute("style", r.value);
+    }
+    return _(() => {
+      l();
+    }), (e, t) => (c(), d("div", null, [
+      h(y, b(e.$attrs, {
+        onOpenMenu: p,
+        onCloseMenu: l
+      }), {
+        default: v(() => [
+          f(e.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function j(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y(e.$attrs, {
-      onOpenMenu: e.push,
-      onCloseMenu: e.pull
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const G = /* @__PURE__ */ p(z, [["render", j]]), H = u({
+}), z = /* @__PURE__ */ m({
   name: "stack",
   inheritAttrs: !1,
+  __name: "stack",
   emits: ["openMenu", "closeMenu"],
-  components: {
-    Menu: d
-  },
-  methods: {
-    openMenu() {
-      this.$emit("openMenu");
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-    }
+  setup(s, { emit: n }) {
+    const o = n;
+    return (i, r) => (c(), d("div", null, [
+      h(y, b(i.$attrs, {
+        onOpenMenu: r[0] || (r[0] = (u) => o("openMenu")),
+        onCloseMenu: r[1] || (r[1] = (u) => o("closeMenu"))
+      }), {
+        default: v(() => [
+          f(i.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function J(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y(e.$attrs, {
-      onOpenMenu: e.openMenu,
-      onCloseMenu: e.closeMenu
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const K = /* @__PURE__ */ p(H, [["render", J]]), Q = u({
+}), U = /* @__PURE__ */ m({
   name: "scalerotate",
   inheritAttrs: !1,
+  __name: "scaleRotate",
   emits: ["openMenu", "closeMenu"],
-  components: {
-    Menu: d
-  },
-  data() {
-    return {
-      bodyOldStyle: "",
-      appOldStyle: ""
-    };
-  },
-  beforeUnmount() {
-    this.pull();
-  },
-  methods: {
-    openMenu() {
-      this.$emit("openMenu");
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-    },
-    push() {
-      this.openMenu();
-      const e = this.$attrs.width ? this.$attrs.width + "px" : "100px";
-      this.bodyOldStyle = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
-      const t = document.querySelector("#page-wrap"), s = document.querySelector("#app");
-      !t || !s || (this.$attrs.right ? t.style.transform = `translate3d(-${e}, 0px, -600px ) rotateY(20deg)` : t.style.transform = `translate3d(${e}, 0px, -600px ) rotateY(-20deg)`, t.style.transformStyle = "preserve-3d", t.style.transition = "all 0.5s ease 0s", t.style.overflow = "hidden", this.appOldStyle = s.getAttribute("style") || "", s.style.perspective = "1500px", s.style.overflow = "hidden", s.style.height = "100%");
-    },
-    pull() {
-      this.closeMenu();
-      const e = document.querySelector("#page-wrap"), t = document.querySelector("#app");
-      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = "", e.style.transformStyle = "", e.style.transformOrigin = "", e.style.overflow = "auto"), t && t.setAttribute("style", this.appOldStyle), document.body.setAttribute("style", this.bodyOldStyle);
+  setup(s, { emit: n }) {
+    const o = n, i = $(), r = g(""), u = g("");
+    function p() {
+      o("openMenu");
+      const e = i.width ? i.width + "px" : "100px";
+      r.value = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
+      const t = document.querySelector("#page-wrap"), a = document.querySelector("#app");
+      !t || !a || (i.right ? t.style.transform = `translate3d(-${e}, 0px, -600px ) rotateY(20deg)` : t.style.transform = `translate3d(${e}, 0px, -600px ) rotateY(-20deg)`, t.style.transformStyle = "preserve-3d", t.style.transition = "all 0.5s ease 0s", t.style.overflow = "hidden", u.value = a.getAttribute("style") || "", a.style.perspective = "1500px", a.style.overflow = "hidden", a.style.height = "100%");
     }
+    function l() {
+      o("closeMenu");
+      const e = document.querySelector("#page-wrap"), t = document.querySelector("#app");
+      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = "", e.style.transformStyle = "", e.style.transformOrigin = "", e.style.overflow = "auto"), t && t.setAttribute("style", u.value), document.body.setAttribute("style", r.value);
+    }
+    return _(() => {
+      l();
+    }), (e, t) => (c(), d("div", null, [
+      h(y, b(e.$attrs, {
+        onOpenMenu: p,
+        onCloseMenu: l
+      }), {
+        default: v(() => [
+          f(e.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function V(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y(e.$attrs, {
-      onOpenMenu: e.push,
-      onCloseMenu: e.pull
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const Z = /* @__PURE__ */ p(Q, [["render", V]]), ee = u({
+}), j = /* @__PURE__ */ m({
   name: "scaledown",
   inheritAttrs: !1,
+  __name: "scaleDown",
   emits: ["openMenu", "closeMenu"],
-  components: {
-    Menu: d
-  },
-  data() {
-    return {
-      bodyOldStyle: "",
-      appOldStyle: ""
-    };
-  },
-  beforeUnmount() {
-    this.pull();
-  },
-  methods: {
-    openMenu() {
-      this.$emit("openMenu");
-    },
-    closeMenu() {
-      this.$emit("closeMenu");
-    },
-    push() {
-      this.openMenu();
-      const e = this.$attrs.width ? this.$attrs.width + "px" : "100px";
-      this.bodyOldStyle = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
-      const t = document.querySelector("#page-wrap"), s = document.querySelector("#app");
-      !t || !s || (this.$attrs.right ? t.style.transform = `translate3d(-${e}, 0px, -600px ) ` : t.style.transform = `translate3d(${e}, 0px, -600px ) `, t.style.transformStyle = "preserve-3d", t.style.transition = "all 0.5s ease 0s", t.style.overflow = "hidden", this.appOldStyle = s.getAttribute("style") || "", s.style.perspective = "1500px", s.style.overflow = "hidden", s.style.height = "100%");
-    },
-    pull() {
-      this.closeMenu();
-      const e = document.querySelector("#page-wrap"), t = document.querySelector("#app");
-      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = "", e.style.transformStyle = "", e.style.transformOrigin = "", e.style.overflow = "auto"), t && t.setAttribute("style", this.appOldStyle), document.body.setAttribute("style", this.bodyOldStyle);
+  setup(s, { emit: n }) {
+    const o = n, i = $(), r = g(""), u = g("");
+    function p() {
+      o("openMenu");
+      const e = i.width ? i.width + "px" : "100px";
+      r.value = document.body.getAttribute("style") || "", document.body.style.overflowX = "hidden";
+      const t = document.querySelector("#page-wrap"), a = document.querySelector("#app");
+      !t || !a || (i.right ? t.style.transform = `translate3d(-${e}, 0px, -600px ) ` : t.style.transform = `translate3d(${e}, 0px, -600px ) `, t.style.transformStyle = "preserve-3d", t.style.transition = "all 0.5s ease 0s", t.style.overflow = "hidden", u.value = a.getAttribute("style") || "", a.style.perspective = "1500px", a.style.overflow = "hidden", a.style.height = "100%");
     }
+    function l() {
+      o("closeMenu");
+      const e = document.querySelector("#page-wrap"), t = document.querySelector("#app");
+      e && (e.style.transition = "all 0.5s ease 0s", e.style.transform = "", e.style.transformStyle = "", e.style.transformOrigin = "", e.style.overflow = "auto"), t && t.setAttribute("style", u.value), document.body.setAttribute("style", r.value);
+    }
+    return _(() => {
+      l();
+    }), (e, t) => (c(), d("div", null, [
+      h(y, b(e.$attrs, {
+        onOpenMenu: p,
+        onCloseMenu: l
+      }), {
+        default: v(() => [
+          f(e.$slots, "default")
+        ]),
+        _: 3
+      }, 16)
+    ]));
   }
-});
-function te(e, t, s, o, r, c) {
-  const n = h("Menu");
-  return l(), i("div", null, [
-    m(n, y(e.$attrs, {
-      onOpenMenu: e.push,
-      onCloseMenu: e.pull
-    }), {
-      default: f(() => [
-        a(e.$slots, "default")
-      ]),
-      _: 3
-    }, 16, ["onOpenMenu", "onCloseMenu"])
-  ]);
-}
-const se = /* @__PURE__ */ p(ee, [["render", te]]), oe = {
-  Menu: d,
-  Slide: E,
-  Bubble: k,
-  Reveal: W,
-  Push: P,
-  PushRotate: G,
-  ScaleDown: se,
-  ScaleRotate: Z,
-  Stack: K,
-  FallDown: I,
-  Elastic: Y
+}), H = {
+  Menu: y,
+  Slide: P,
+  Bubble: T,
+  Reveal: D,
+  Push: X,
+  PushRotate: I,
+  ScaleDown: j,
+  ScaleRotate: U,
+  Stack: z,
+  FallDown: Y,
+  Elastic: F
 };
 export {
-  k as Bubble,
-  Y as Elastic,
-  I as FallDown,
-  d as Menu,
-  P as Push,
-  G as PushRotate,
-  W as Reveal,
-  se as ScaleDown,
-  Z as ScaleRotate,
-  E as Slide,
-  K as Stack,
-  oe as default
+  T as Bubble,
+  F as Elastic,
+  Y as FallDown,
+  y as Menu,
+  X as Push,
+  I as PushRotate,
+  D as Reveal,
+  j as ScaleDown,
+  U as ScaleRotate,
+  P as Slide,
+  z as Stack,
+  H as default
 };

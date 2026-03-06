@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multiple CSS animation styles. Published on npm as `vue-burger-menu`. Uses Vite 7 for build tooling, TypeScript with `defineComponent` + Options API throughout.
+Vue Burger Menu is a Vue 3 off-canvas sidebar menu component library with multiple CSS animation styles. Published on npm as `vue-burger-menu`. Uses Vite 7 for build tooling, TypeScript throughout. The base `Menu.vue` and `App.vue` use `defineComponent` + Options API; all animation variant wrappers use `<script setup>` + Composition API.
 
 ## Commands
 
@@ -72,7 +72,7 @@ Animation Variant (e.g., Slide, Push, ScaleRotate)
 
 **`src/components/Menu.vue`** — Base component containing all shared menu logic: open/close state, overlay, escape key handling, outside-click detection, right-side positioning, burger/cross icons, and event listeners. Manipulates DOM directly via `$refs` and inline styles. Registers a click listener on `document` in `created()` and a keyup listener in `mounted()`.
 
-**`src/components/Menu/*.vue`** — Animation variant wrappers. Each wraps `Menu.vue`, passes props through via `v-bind="$attrs"` with `inheritAttrs: false`, and hooks into `@openMenu`/`@closeMenu` events to apply animation-specific DOM transforms. Some variants (Push, ScaleDown, ScaleRotate, PushRotate, Reveal, FallDown) use `document.querySelector('#page-wrap')` and `document.querySelector('#app')` to animate the surrounding page. These variants use `beforeUnmount` to reset external DOM styles so that switching menu types while open doesn't leave stale transforms on `#page-wrap`, `#app`, or `body`.
+**`src/components/Menu/*.vue`** — Animation variant wrappers using `<script setup lang="ts">` + Composition API. Each wraps `Menu.vue`, passes props through via `v-bind="$attrs"` with `defineOptions({ inheritAttrs: false })`, and hooks into `@openMenu`/`@closeMenu` events to apply animation-specific DOM transforms. Variants use `useAttrs()` to read fallthrough attrs (e.g. `width`, `right`) in script, `useTemplateRef()` for component refs (Bubble, FallDown), and `ref()` for reactive state. Some variants (Push, ScaleDown, ScaleRotate, PushRotate, Reveal, FallDown) use `document.querySelector('#page-wrap')` and `document.querySelector('#app')` to animate the surrounding page. These variants use `onBeforeUnmount` to reset external DOM styles so that switching menu types while open doesn't leave stale transforms on `#page-wrap`, `#app`, or `body`. Because variants use `<script setup>`, the Vue compiler generates direct component references for the imported `Menu` component instead of `resolveComponent()` calls.
 
 **`src/components/index.ts`** — Barrel file exporting all variants as both named and default exports. This is the library entry point for the Vite build.
 
@@ -95,13 +95,13 @@ Work-in-progress: FallDown, Elastic, Stack
 | ScaleDown | `#page-wrap`, `#app`, `body` | `translate3d(width, 0, -600px)` + `perspective: 1500px` on #app |
 | ScaleRotate | `#page-wrap`, `#app`, `body` | `translate3d(width, 0, -600px) rotateY(-20deg)` + perspective |
 | PushRotate | `#page-wrap`, `#app`, `body` | `translate3d(width, 0, 0) rotateY(-15deg)` + transformOrigin + perspective |
-| Bubble | `.bm-menu` (via `$refs`) | `borderRadius` animation with 300ms setTimeout phase |
+| Bubble | `.bm-menu` (via `useTemplateRef`) | `borderRadius` animation with 300ms setTimeout phase |
 
 ### Build Configuration
 
 - **`vite.config.ts`**: Library mode build targeting `src/components/index.ts`, outputs ES and UMD formats, externalizes `vue`
 - CSS is injected into the DOM at runtime via `vite-plugin-css-injected-by-js` (matches the old Vue CLI `css.extract: false` behavior — consumers just import JS, no separate CSS import needed)
-- `resolve.extensions` includes `.vue` — Vite does not resolve `.vue` extensions by default (unlike webpack/Vue CLI), so this is required for the extensionless imports throughout the codebase
+- `resolve.extensions` includes `.vue` — Vite does not resolve `.vue` extensions by default (unlike webpack/Vue CLI). All imports in the codebase now use explicit `.vue` extensions, so this setting is no longer strictly required but remains as a safety net
 - Rollup output uses `exports: 'named'` to avoid UMD consumer issues with mixed named/default exports
 - **`tsconfig.build.json`**: Extends `tsconfig.json` with `declaration: true`, `emitDeclarationOnly: true`, `outDir: "dist"`, `rootDir: "src"`. Run by the build script after Vite to generate `.d.ts` files into `dist/components/`
 - Published files: `dist/vue3-burger-menu.es.js` (ES module), `dist/vue3-burger-menu.umd.js` (UMD), and `dist/components/*.d.ts` (TypeScript declarations). The `types` field and `exports` types condition in `package.json` point to `dist/components/index.d.ts`
@@ -129,11 +129,11 @@ Work-in-progress: FallDown, Elastic, Stack
 - CSS classes use `bm-` prefix (e.g., `.bm-menu`, `.bm-burger-button`, `.bm-overlay`)
 - Component files use camelCase (`pushRotate.vue`, `scaleDown.vue`); exports use PascalCase (`PushRotate`, `ScaleDown`)
 - Events: `@openMenu` and `@closeMenu` propagated up through wrapper → base → consumer
-- All components declare `emits: ['openMenu', 'closeMenu']`
-- Wrapper components use `inheritAttrs: false` to control attribute forwarding
+- All components declare emits — `Menu.vue` via `emits: ['openMenu', 'closeMenu']`, variants via `defineEmits`
+- Wrapper components use `inheritAttrs: false` to control attribute forwarding (`defineOptions` in `<script setup>`)
 - Animations use inline style manipulation rather than CSS classes/transitions
-- Vue 3 Options API with `defineComponent` and `unmounted` lifecycle hook
-- All Vue SFCs use `<script lang="ts">` with `defineComponent` from `vue`
+- `Menu.vue` and `App.vue` use Options API with `defineComponent`; all variant wrappers use `<script setup lang="ts">` with Composition API (`useAttrs`, `useTemplateRef`, `ref`, `onBeforeUnmount`, etc.)
+- `Menu.vue` uses the `unmounted` lifecycle hook for cleanup; variants use `onBeforeUnmount`
 - `src/env.d.ts` provides the Vue SFC type shim (`declare module '*.vue'`) and Vite client types
 
 ### Vue 2 → Vue 3 Migration Pitfalls (resolved)
