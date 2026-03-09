@@ -1,27 +1,21 @@
 <template>
     <div>
-        <Menu v-bind="this.$attrs" @openMenu="openMenu" @closeMenu="closeMenu">
+        <Menu v-bind="$attrs" @openMenu="emit('openMenu')" @closeMenu="emit('closeMenu')">
             <slot></slot>
         </Menu>
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
-      name: 'slide',
-      components: {
-        Menu: Menu
-      },
-      methods: {
-        openMenu() {
-          this.$emit('openMenu');
-        },
-        closeMenu() {
-          this.$emit('closeMenu');
-        }
-      }
-    };
+<script setup lang="ts">
+import Menu from '../Menu.vue';
+
+defineOptions({
+  name: 'slide',
+  inheritAttrs: false
+});
+
+const emit = defineEmits<{
+  openMenu: [];
+  closeMenu: [];
+}>();
 </script>
-
-

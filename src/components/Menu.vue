@@ -17,9 +17,12 @@
     </div>
 </template>
 
-<script>
-    export default {
+<script lang="ts">
+    import { defineComponent } from 'vue';
+
+    export default defineComponent({
       name: 'menubar',
+      emits: ['openMenu', 'closeMenu'],
       data() {
         return {
           isSideBarOpen: false
@@ -35,7 +38,7 @@
           required: false
         },
         width: {
-          type: [String],
+          type: String,
           required: false,
           default: '300'
         },
@@ -45,10 +48,6 @@
         },
         noOverlay: {
           type: Boolean,
-          required: false
-        },
-        onStateChange: {
-          type: Function,
           required: false
         },
         burgerIcon: {
@@ -68,7 +67,7 @@
         }
       },
       methods: {
-        openMenu(e) {
+        openMenu(e?: Event) {
           if (e){
             e.stopPropagation();
             e.preventDefault();
@@ -82,21 +81,21 @@
           this.isSideBarOpen = true;
 
           if (!this.noOverlay) {
-            document.body.className += 'bm-overlay';
+            document.body.classList.add('bm-overlay');
           }
           if (this.right) {
-            this.$refs.sideNav.style.left = 'auto';
-            this.$refs.sideNav.style.right = '0px';
+            (this.$refs.sideNav as HTMLElement).style.left = 'auto';
+            (this.$refs.sideNav as HTMLElement).style.right = '0px';
           }
-          this.$nextTick(function() {
-            this.$refs.sideNav.style.width = this.width
+          this.$nextTick(() => {
+            (this.$refs.sideNav as HTMLElement).style.width = this.width
               ? this.width + 'px'
               : '300px';
           });
           return false;
         },
 
-        closeMenu(e) {
+        closeMenu(e?: Event) {
           if (e){
             e.stopPropagation();
             e.preventDefault();
@@ -107,36 +106,51 @@
 
           this.$emit('closeMenu');
           this.isSideBarOpen = false;
-          document.body.className = document.body.className.replace(
-            'bm-overlay',
-            ''
-          );
-          this.$refs.sideNav.style.width = '0px';
+          document.body.classList.remove('bm-overlay');
+          (this.$refs.sideNav as HTMLElement).style.width = '0px';
           return false;
         },
 
-        closeMenuOnEsc(e) {
-          e = e || window.event;
+        closeMenuOnEsc(e: KeyboardEvent) {
           if (e.key === 'Escape' || e.keyCode === 27) {
             this.closeMenu();
           }
         },
-        documentClick(e) {
-          let element = this.$refs.bmBurgerButton;
-          let target = null;
-          if (e && e.target) {
-            target = e.target;
-          }
+        documentClick(e: MouseEvent) {
+          const element = this.$refs.bmBurgerButton as HTMLElement | undefined;
+          const target = e.target as HTMLElement | null;
 
           if (
             element &&
+            target &&
             element !== target &&
             !element.contains(target) &&
-            e.target.className !== 'bm-menu' &&
+            target.className !== 'bm-menu' &&
             this.isSideBarOpen &&
             !this.disableOutsideClick
           ) {
             this.closeMenu();
+          }
+        },
+        applyPosition() {
+          const burgerButton = this.$refs.bmBurgerButton as HTMLElement | undefined;
+          const burgerMenu = this.$refs.sideNav as HTMLElement | undefined;
+          const crossButton = this.$refs.bmCrossButton as HTMLElement | undefined;
+          if (!burgerButton || !burgerMenu || !crossButton) {
+            return;
+          }
+          if (this.right) {
+            burgerMenu.style.left = 'auto';
+            burgerMenu.style.right = '0px';
+            burgerButton.style.left = 'auto';
+            burgerButton.style.right = '36px';
+            crossButton.style.right = '250px';
+          } else {
+            if (burgerButton.hasAttribute('style')) {
+              burgerButton.removeAttribute('style');
+              burgerMenu.style.right = 'auto';
+              crossButton.style.right = '0px';
+            }
           }
         }
       },
@@ -145,35 +159,41 @@
           document.addEventListener('keyup', this.closeMenuOnEsc);
         }
 
-        const burgerButton = this.$refs.bmBurgerButton;
+        const burgerButton = this.$refs.bmBurgerButton as HTMLElement;
         burgerButton.addEventListener('touchstart', this.openMenu);
         burgerButton.addEventListener('click', this.openMenu);
 
-        const crossButton = this.$refs.bmCrossButton;
+        const crossButton = this.$refs.bmCrossButton as HTMLElement;
         crossButton.addEventListener('click', this.closeMenu);
         crossButton.addEventListener('touchstart', this.closeMenu);
 
+        this.applyPosition();
       },
-      created: function() {
+      created() {
         document.addEventListener('click', this.documentClick);
       },
-      destroyed: function() {
+      unmounted() {
+        document.body.classList.remove('bm-overlay');
         document.removeEventListener('keyup', this.closeMenuOnEsc);
         document.removeEventListener('click', this.documentClick);
 
-        const burgerButton = this.$refs.bmBurgerButton;
-        burgerButton.removeEventListener('touchstart', this.openMenu);
-        burgerButton.removeEventListener('click', this.openMenu);
+        const burgerButton = this.$refs.bmBurgerButton as HTMLElement | undefined;
+        if (burgerButton) {
+          burgerButton.removeEventListener('touchstart', this.openMenu);
+          burgerButton.removeEventListener('click', this.openMenu);
+        }
 
-        const crossButton = this.$refs.bmCrossButton;
-        crossButton.removeEventListener('click', this.closeMenu);
-        crossButton.removeEventListener('touchstart', this.closeMenu);
+        const crossButton = this.$refs.bmCrossButton as HTMLElement | undefined;
+        if (crossButton) {
+          crossButton.removeEventListener('click', this.closeMenu);
+          crossButton.removeEventListener('touchstart', this.closeMenu);
+        }
       },
       watch: {
         isOpen: {
           deep: true,
           immediate: true,
-          handler(newValue, oldValue) {
+          handler(newValue: boolean, oldValue: boolean) {
             this.$nextTick(() => {
               if (!oldValue && newValue) {
                 this.openMenu();
@@ -185,40 +205,14 @@
           }
         },
         right: {
-          deep: true,
-          immediate: true,
-          handler(oldValue, newValue) {
-            var burgerButton = this.$refs.bmBurgerButton;
-            var burgerMenu = this.$refs.sideNav;
-            var crossButton = this.$refs.bmCrossButton;
-            if (!burgerButton || !burgerMenu || !crossButton) {
-              // component is not fully-formed
-              return;
-            }
-            if (oldValue) {
-              this.$nextTick(() => {
-                burgerMenu.style.left = 'auto';
-                burgerMenu.style.right = '0px';
-
-                burgerButton.style.left = 'auto';
-                burgerButton.style.right = '36px';
-
-                crossButton.style.right = '250px';
-              });
-            }
-            if (newValue) {
-              if (
-                burgerButton.hasAttribute('style')
-              ) {
-                burgerButton.removeAttribute('style');
-                burgerMenu.style.right = 'auto';
-                crossButton.style.right='0px';
-              }
-            }
+          handler() {
+            this.$nextTick(() => {
+              this.applyPosition();
+            });
           }
         }
       }
-    };
+    });
 </script>
 
 <style>

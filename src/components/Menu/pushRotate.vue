@@ -1,74 +1,75 @@
 <template>
     <div>
-        <Menu v-bind="this.$attrs" @openMenu="push" @closeMenu="pull">
+        <Menu v-bind="$attrs" @openMenu="push" @closeMenu="pull">
             <slot></slot>
         </Menu>
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
-      name: 'pushrotate',
-      components: {
-        Menu: Menu
-      },
-      data() {
-        return {
-          bodyOldStyle: '',
-          appOldStyle: ''
-        };
-      },
-      methods: {
-        openMenu () {
-            this.$emit("openMenu")
-        },
-        closeMenu () {
-            this.$emit("closeMenu")
-        },
-        push() {
-          this.openMenu()
-          let width = this.$attrs.width ? this.$attrs.width + 'px' : '300px';
+<script setup lang="ts">
+import { ref, useAttrs, onBeforeUnmount } from 'vue';
+import Menu from '../Menu.vue';
 
-          this.bodyOldStyle = document.body.getAttribute('style') || '';
-          document.body.style.overflowX = 'hidden';
+defineOptions({
+  name: 'pushrotate',
+  inheritAttrs: false
+});
 
-          if (this.$attrs.right) {
-            document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(-${width}, 0px, 0px ) rotateY(15deg)`;
-            document.querySelector('#page-wrap').style.transformOrigin =
-              '100% 50% 0px';
-          } else {
-            document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(${width}, 0px, 0px ) rotateY(-15deg)`;
-            document.querySelector('#page-wrap').style.transformOrigin =
-              '0% 50% 0px';
-          }
+const emit = defineEmits<{
+  openMenu: [];
+  closeMenu: [];
+}>();
 
-          document.querySelector('#page-wrap').style.transformStyle = 'preserve-3d';
+const attrs = useAttrs();
+const bodyOldStyle = ref('');
+const appOldStyle = ref('');
 
-          document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-          this.appOldStyle = document.querySelector('#app').getAttribute('style') || '';
+function push() {
+  emit('openMenu');
+  const width = (attrs.width as string | undefined) ? attrs.width + 'px' : '300px';
 
-          document.querySelector('#app').style.perspective = '1500px';
-          document.querySelector('#app').style.overflow = 'hidden';
-        },
-        pull() {
-          this.closeMenu()
-          document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-          document.querySelector('#page-wrap').style.transform = '';
-          document.querySelector('#page-wrap').style.transformStyle = '';
-          document.querySelector('#page-wrap').style.transformOrigin = '';
+  bodyOldStyle.value = document.body.getAttribute('style') || '';
+  document.body.style.overflowX = 'hidden';
 
-          document.querySelector('#app').setAttribute('style', this.appOldStyle);
-          document.body.setAttribute('style', this.bodyOldStyle);
-        }
-      }
-    };
+  const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+  const appEl = document.querySelector<HTMLElement>('#app');
+  if (!pageWrap || !appEl) {
+    return;
+  }
+
+  if (attrs.right) {
+    pageWrap.style.transform = `translate3d(-${width}, 0px, 0px ) rotateY(15deg)`;
+    pageWrap.style.transformOrigin = '100% 50% 0px';
+  } else {
+    pageWrap.style.transform = `translate3d(${width}, 0px, 0px ) rotateY(-15deg)`;
+    pageWrap.style.transformOrigin = '0% 50% 0px';
+  }
+
+  pageWrap.style.transformStyle = 'preserve-3d';
+  pageWrap.style.transition = 'all 0.5s ease 0s';
+
+  appOldStyle.value = appEl.getAttribute('style') || '';
+  appEl.style.perspective = '1500px';
+  appEl.style.overflow = 'hidden';
+}
+
+function pull() {
+  emit('closeMenu');
+  const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+  const appEl = document.querySelector<HTMLElement>('#app');
+  if (pageWrap) {
+    pageWrap.style.transition = 'all 0.5s ease 0s';
+    pageWrap.style.transform = '';
+    pageWrap.style.transformStyle = '';
+    pageWrap.style.transformOrigin = '';
+  }
+  if (appEl) {
+    appEl.setAttribute('style', appOldStyle.value);
+  }
+  document.body.setAttribute('style', bodyOldStyle.value);
+}
+
+onBeforeUnmount(() => {
+  pull();
+});
 </script>
-
-

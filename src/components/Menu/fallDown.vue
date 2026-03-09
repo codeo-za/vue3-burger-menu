@@ -1,70 +1,98 @@
 <template>
     <div>
-        <Menu ref="sideNav" v-bind="this.$attrs" @openMenu="openMenu" @closeMenu="closeMenu">
+        <Menu ref="sideNav" v-bind="$attrs" @openMenu="openMenu" @closeMenu="closeMenu">
             <slot></slot>
         </Menu>
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
-      name: 'elastic',
-      components: {
-        Menu: Menu
-      },
-      data() {
-        return {
-          bodyOldStyle: '',
-          propsToPass: {
-            isOpen: this.$attrs.isOpen,
-            right: this.$attrs.right,
-            width: this.$attrs.width,
-            disableEsc: this.$attrs.disableEsc,
-            noOverlay: this.$attrs.noOverlay,
-            onStateChange: this.$attrs.onStateChange
-          }
-        };
-      },
-      methods : {
-          openMenu () {
-            this.$emit("openMenu")
-            let width = this.$attrs.width ? this.$attrs.width + 'px' : '300px';
-            this.$refs.sideNav.$el.querySelector('.bm-menu').style.overflowY = 'hidden';
-            this.bodyOldStyle = document.body.getAttribute('style') || '';
-            document.body.style.overflowX = 'hidden';
-            this.$refs.sideNav.$el.querySelector('.bm-menu').style.transition='0.5s';
+<script setup lang="ts">
+import { ref, nextTick, useAttrs, useTemplateRef, onMounted, onBeforeUnmount } from 'vue';
+import Menu from '../Menu.vue';
 
-          if (this.$attrs.right) {
-             document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(-${width}, 0px, 0px )`;
-          } else {
-             document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(${width}, 0px, 0px )`;
-          }
+defineOptions({
+  name: 'falldown',
+  inheritAttrs: false
+});
 
-             document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
+const emit = defineEmits<{
+  openMenu: [];
+  closeMenu: [];
+}>();
 
-            this.$nextTick(() => {
-              this.$refs.sideNav.$el.querySelector('.bm-menu').style.height='100%';
-              });
+const attrs = useAttrs();
+const sideNav = useTemplateRef<InstanceType<typeof Menu>>('sideNav');
+const bodyOldStyle = ref('');
 
-          },
-          closeMenu () {
-            this.$emit("closeMenu")
-            document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-            document.querySelector('#page-wrap').style.transform = '';
-            document.body.setAttribute('style', this.bodyOldStyle);
-            this.$refs.sideNav.$el.querySelector('.bm-menu').style.height='0px';
+function getBmMenu(): HTMLElement | null {
+  const menuEl = sideNav.value?.$el as HTMLElement | undefined;
+  return menuEl?.querySelector<HTMLElement>('.bm-menu') ?? null;
+}
 
-          }
-      },
-      mounted () {
-        this.$refs.sideNav.$el.querySelector('.bm-menu').style.height='0px';
-      }
-    };
+function openMenu() {
+  emit('openMenu');
+  const width = (attrs.width as string | undefined) ? attrs.width + 'px' : '300px';
+  const bmMenu = getBmMenu();
+  if (!bmMenu) {
+    return;
+  }
+  bmMenu.style.overflowY = 'hidden';
+  bodyOldStyle.value = document.body.getAttribute('style') || '';
+  document.body.style.overflowX = 'hidden';
+  bmMenu.style.transition = '0.5s';
+
+  const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+  if (!pageWrap) {
+    return;
+  }
+
+  if (attrs.right) {
+    pageWrap.style.transform = `translate3d(-${width}, 0px, 0px )`;
+  } else {
+    pageWrap.style.transform = `translate3d(${width}, 0px, 0px )`;
+  }
+
+  pageWrap.style.transition = 'all 0.5s ease 0s';
+
+  nextTick(() => {
+    const menu = getBmMenu();
+    if (menu) {
+      menu.style.height = '100%';
+    }
+  });
+}
+
+function closeMenu() {
+  emit('closeMenu');
+  const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+  if (pageWrap) {
+    pageWrap.style.transition = 'all 0.5s ease 0s';
+    pageWrap.style.transform = '';
+  }
+  document.body.setAttribute('style', bodyOldStyle.value);
+  const bmMenu = getBmMenu();
+  if (bmMenu) {
+    bmMenu.style.height = '0px';
+  }
+}
+
+onMounted(() => {
+  const bmMenu = getBmMenu();
+  if (bmMenu) {
+    bmMenu.style.height = '0px';
+  }
+});
+
+onBeforeUnmount(() => {
+  const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+  if (pageWrap) {
+    pageWrap.style.transform = '';
+    pageWrap.style.transition = '';
+  }
+  document.body.setAttribute('style', bodyOldStyle.value);
+  const bmMenu = getBmMenu();
+  if (bmMenu) {
+    bmMenu.style.height = '0px';
+  }
+});
 </script>

@@ -1,40 +1,21 @@
 <template>
     <div>
-        <Menu v-bind="propsToPass" openMenu="openMenu" @closeMenu="closeMenu">
+        <Menu v-bind="$attrs" @openMenu="emit('openMenu')" @closeMenu="emit('closeMenu')">
             <slot></slot>
         </Menu>
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
-      name: 'stack',
-      components: {
-        Menu: Menu
-      },
-      data() {
-        return {
-          propsToPass: {
-            isOpen: this.$attrs.isOpen,
-            right: this.$attrs.right,
-            width: this.$attrs.width,
-            disableEsc: this.$attrs.disableEsc,
-            noOverlay: this.$attrs.noOverlay,
-            onStateChange: this.$attrs.onStateChange
-          }
-        };
-      },
-      methods : {
-          openMenu () {
-              this.$emit("openMenu")
-          },
-          closeMenu () {
-              this.$emit("closeMenu")
-          }
-      }
-    };
+<script setup lang="ts">
+import Menu from '../Menu.vue';
+
+defineOptions({
+  name: 'stack',
+  inheritAttrs: false
+});
+
+const emit = defineEmits<{
+  openMenu: [];
+  closeMenu: [];
+}>();
 </script>
-
-
-

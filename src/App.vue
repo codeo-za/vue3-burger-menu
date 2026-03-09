@@ -1,72 +1,86 @@
 <template>
-    <div id="app">
-        <component :is="currentMenu" :right="side === 'right' ? true: false">
-            <a href="#">
-                <i class="fa fa-fw fa-star-o"></i>
-                <span>Favourites</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-bell-o"></i>
-                <span>Alerts</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-envelope-o"></i>
-                <span>Messages</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-comment-o"></i>
-                <span>Comments</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-bar-chart-o"></i>
-                <span>Analytics</span>
-            </a>
-            <a href="#">
-                <i class="fa fa-fw fa-newspaper-o"></i>
-                <span>Reading</span>
-            </a>
-        </component>
-        <main id="page-wrap">
-            <img src="https://img.shields.io/npm/dt/vue-burger-menu.svg" /> &emsp;
-            <img src="https://img.shields.io/github/stars/mbj36/vue-burger-menu.svg" />
-            <h1>
-                <a href="https://github.com/mbj36/vue-burger-menu">vue-burger-menu</a> <br/>
-            </h1>
-            <a :class="{ sideButton: true, left: true, active: this.side === 'left' }" @click="changeSide('left')">Left</a>
-            <a :class="{sideButton: true, right: true, active: this.side === 'right' }" @click="changeSide('right')">Right</a>
+    <component :is="currentMenuComponent" :key="currentMenu" :right="side === 'right' ? true: false">
+        <a href="#">
+            <i class="fa fa-fw fa-star-o"></i>
+            <span>Favourites</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-bell-o"></i>
+            <span>Alerts</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-envelope-o"></i>
+            <span>Messages</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-comment-o"></i>
+            <span>Comments</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-bar-chart-o"></i>
+            <span>Analytics</span>
+        </a>
+        <a href="#">
+            <i class="fa fa-fw fa-newspaper-o"></i>
+            <span>Reading</span>
+        </a>
+    </component>
+    <main id="page-wrap">
+        <img src="https://img.shields.io/npm/dt/vue-burger-menu.svg" /> &emsp;
+        <img src="https://img.shields.io/github/stars/mbj36/vue-burger-menu.svg" />
+        <h1>
+            <a href="https://github.com/mbj36/vue-burger-menu">vue-burger-menu</a> <br/>
+        </h1>
+        <a :class="{ sideButton: true, left: true, active: side === 'left' }" @click="changeSide('left')">Left</a>
+        <a :class="{sideButton: true, right: true, active: side === 'right' }" @click="changeSide('right')">Right</a>
 
-            <h2 class="description">An off-canvas sidebar vue component with a collection of effects and styles using CSS transitions and SVG path animations.</h2>
+        <h2 class="description">An off-canvas sidebar vue 3 component with a collection of effects and styles using CSS transitions and SVG path animations.</h2>
 
-            <nav class="demo-buttons">
-                <span v-for="(menu, index) in menus" :key="index">
-                    <span>
-                        <a :class="currentMenu === menu.buttonText.replace(/ +/g, '').toLowerCase() ? {currentDemo:true}: {currentDemo:false}" @click="changeMenu(menu.buttonText)">
-                            {{menu.buttonText}}
-                        </a>
-                    </span>
+        <nav class="demo-buttons">
+            <span v-for="(menu, index) in menus" :key="index">
+                <span>
+                    <a :class="currentMenu === menu.buttonText.replace(/ +/g, '').toLowerCase() ? {currentDemo:true}: {currentDemo:false}" @click="changeMenu(menu.buttonText)">
+                        {{menu.buttonText}}
+                    </a>
                 </span>
-            </nav>
-            Inspired by
-            <a href="https://github.com/codrops/OffCanvasMenuEffects">Off-Canvas Menu Effects</a> and
-            <a href="https://github.com/codrops/SidebarTransitions">Sidebar Transitions</a> by Codrops
-        </main>
-    </div>
+            </span>
+        </nav>
+        Inspired by
+        <a href="https://github.com/codrops/OffCanvasMenuEffects">Off-Canvas Menu Effects</a> and
+        <a href="https://github.com/codrops/SidebarTransitions">Sidebar Transitions</a> by Codrops
+    </main>
 </template>
 
-<script>
-    import slide from './components/Menu/slide';
-    import bubble from './components/Menu/bubble';
-    import elastic from './components/Menu/elastic';
-    import falldown from './components/Menu/fallDown';
-    import push from './components/Menu/push';
-    import pushrotate from './components/Menu/pushRotate';
-    import reveal from './components/Menu/reveal';
-    import scaledown from './components/Menu/scaleDown';
-    import scalerotate from './components/Menu/scaleRotate';
-    import stack from './components/Menu/stack';
-    import Menu from './components/Menu';
+<script lang="ts">
+    import { defineComponent, markRaw, type Component } from 'vue';
+    import slide from './components/Menu/slide.vue';
+    import bubble from './components/Menu/bubble.vue';
+    import elastic from './components/Menu/elastic.vue';
+    import falldown from './components/Menu/fallDown.vue';
+    import push from './components/Menu/push.vue';
+    import pushrotate from './components/Menu/pushRotate.vue';
+    import reveal from './components/Menu/reveal.vue';
+    import scaledown from './components/Menu/scaleDown.vue';
+    import scalerotate from './components/Menu/scaleRotate.vue';
+    import stack from './components/Menu/stack.vue';
+    import Menu from './components/Menu.vue';
 
-    export default {
+    // Vue 3 requires markRaw for component objects stored in reactive state
+    // to prevent them from being wrapped in a reactive proxy
+    const menuComponents: Record<string, Component> = {
+      slide: markRaw(slide),
+      bubble: markRaw(bubble),
+      elastic: markRaw(elastic),
+      falldown: markRaw(falldown),
+      push: markRaw(push),
+      pushrotate: markRaw(pushrotate),
+      reveal: markRaw(reveal),
+      scaledown: markRaw(scaledown),
+      scalerotate: markRaw(scalerotate),
+      stack: markRaw(stack),
+    };
+
+    export default defineComponent({
       data() {
         return {
           menus: {
@@ -98,16 +112,21 @@
         falldown,
         Menu
       },
+      computed: {
+        currentMenuComponent(): Component {
+          return menuComponents[this.currentMenu];
+        }
+      },
       methods: {
-        changeMenu(menu) {
+        changeMenu(menu: string) {
           this.currentMenu = menu.replace(/ +/g, '').toLowerCase();
           return this.currentMenu;
         },
-        changeSide(side) {
+        changeSide(side: string) {
           this.side = side;
         }
       }
-    };
+    });
 </script>
 
  <style lang="less">

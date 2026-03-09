@@ -1,61 +1,62 @@
 <template>
     <div>
-        <Menu v-bind="this.$attrs" @openMenu="push" @closeMenu="pull">
+        <Menu v-bind="$attrs" @openMenu="push" @closeMenu="pull">
             <slot></slot>
         </Menu>
     </div>
 </template>
 
-<script>
-    import Menu from '../Menu';
-    export default {
-      name: 'reveal',
-      data() {
-        return {
-          bodyOldStyle: ''
-        };
-      },
-      components: {
-        Menu: Menu
-      },
-      methods: {
-        openMenu () {
-            this.$emit("openMenu")
-        },
-        closeMenu () {
-            this.$emit("closeMenu")
-        },
-        push() {
-          this.openMenu()
-          let width = this.$attrs.width ? this.$attrs.width + 'px' : '300px';
+<script setup lang="ts">
+import { ref, useAttrs, onBeforeUnmount } from 'vue';
+import Menu from '../Menu.vue';
 
-          this.bodyOldStyle = document.body.getAttribute('style') || '';
-          document.body.style.overflowX = 'hidden';
+defineOptions({
+  name: 'reveal',
+  inheritAttrs: false
+});
 
-          if (this.$attrs.right) {
-            document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(-${width}, 0px, 0px )`;
-          } else {
-            document.querySelector(
-              '#page-wrap'
-            ).style.transform = `translate3d(${width}, 0px, 0px )`;
-          }
+const emit = defineEmits<{
+  openMenu: [];
+  closeMenu: [];
+}>();
 
-          document.querySelector('#page-wrap').style.position = 'relative';
-          document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-        },
-        pull() {
-          this.closeMenu()
-          document.querySelector('#page-wrap').style.transition =
-            'all 0.5s ease 0s';
-          document.querySelector('#page-wrap').style.transform = '';
-          document.querySelector('#page-wrap').style.position = '';
-          document.body.setAttribute('style', this.bodyOldStyle);
-        }
-      }
-    };
+const attrs = useAttrs();
+const bodyOldStyle = ref('');
+
+function push() {
+  emit('openMenu');
+  const width = (attrs.width as string | undefined) ? attrs.width + 'px' : '300px';
+
+  bodyOldStyle.value = document.body.getAttribute('style') || '';
+  document.body.style.overflowX = 'hidden';
+
+  const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+  if (!pageWrap) {
+    return;
+  }
+
+  if (attrs.right) {
+    pageWrap.style.transform = `translate3d(-${width}, 0px, 0px )`;
+  } else {
+    pageWrap.style.transform = `translate3d(${width}, 0px, 0px )`;
+  }
+
+  pageWrap.style.position = 'relative';
+  pageWrap.style.transition = 'all 0.5s ease 0s';
+}
+
+function pull() {
+  emit('closeMenu');
+  const pageWrap = document.querySelector<HTMLElement>('#page-wrap');
+  if (pageWrap) {
+    pageWrap.style.transition = 'all 0.5s ease 0s';
+    pageWrap.style.transform = '';
+    pageWrap.style.position = '';
+  }
+  document.body.setAttribute('style', bodyOldStyle.value);
+}
+
+onBeforeUnmount(() => {
+  pull();
+});
 </script>
-
-
